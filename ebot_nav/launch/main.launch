@@ -1,0 +1,10 @@
+<launch>
+
+    <include file="$(find ebot_description)/launch/task2.launch" />
+    <include file="$(find ebot_description)/launch/ebot_visualize.launch"/>
+    
+    <include file="$(find ebot_nav)/launch/amcl.launch" />
+    
+    <node name="waypoints" pkg="ebot_nav" type="waypoints.py" output="screen" />
+
+</launch>
