@@ -14,6 +14,13 @@ Please find the base package for this theme from this repository.
 
 ## Installation
 
+### Prequites
+
+```
+sudo apt-get install ros-melodic-object-recognition-msgs
+```
+
+
 ###  ROS installation
 
 - Follow the Official Installation instruction from the [ROS-Melodic](http://wiki.ros.org/melodic/Installation/Ubuntu) website. We recommend to use the following command for **step 1.4**. This will ensure all the basic package availability and possibly avoid any "missing packages" errors.
