@@ -6,7 +6,7 @@
     <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find ebot_description)/urdf/ebot.xacro'"/>
 
 <!--   test1 world for testing your navigation stack in small simulation world-->
-	<include file="$(find ebot_gazebo)/launch/packaging_assist.launch" />
+	<include file="$(find ebot_gazebo)/launch/packaging_assist_cam1.launch" />
 
 	<arg name="x" default="0"/>
 	<arg name="y" default="0"/>
