@@ -10,99 +10,37 @@ from actionlib_msgs.msg import GoalStatus
 from geometry_msgs.msg import Pose, Point, Quaternion
 from tf.transformations import quaternion_from_euler
 
-from ebot_mani.ur5_helper import Ur5Moveit
+# from ebot_mani.ur5_helper import Ur5Moveit
 
-class MoveBaseSeq():
+class Ebot():
 
     def __init__(self):
-
-        rospy.init_node('move_base_sequence')
-
-        points_seq = [-9.1, -1.2, 0.0,
-                      10.7, 10.5, 0.0,
-                      12.6, -1.7, 0.0, # y = -1.7 instead of -1.9 which is within 0.5 tolerance
-                      18.2, -1.4, 0.0,
-                      -2.0, 4.0, 0.0]
-
-        yaweulerangles_seq = [pi/4,-pi/2, pi/2, -pi/4, 0]
-
-
-        quat_seq = list()
-
-        self.pose_seq = list()
-        self.goal_cnt = 0
-
-
-        for yawangle in yaweulerangles_seq:
-            quat_seq.append(Quaternion(*(quaternion_from_euler(0, 0, yawangle, axes='sxyz'))))
-        n = 3
-
-        points = [points_seq[i:i+n] for i in range(0, len(points_seq), n)]
-        for point in points:
-            self.pose_seq.append(Pose(Point(*point),quat_seq[n-3]))
-            n += 1
-
         self.client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
         rospy.loginfo("Waiting for move_base action server...")
         wait = self.client.wait_for_server()
-
         rospy.loginfo("Connected to move base server")
-        rospy.loginfo("Starting goals achievements ...")
-        
-        self.start_time = rospy.Time.now()
+        self.goal = MoveBaseGoal()
+        self.goal.target_pose.header.frame_id = "map"
+    
+    def go_to_pose(self, goalPose):
+        self.goal.target_pose.header.stamp = rospy.Time.now() 
+        self.goal.target_pose.pose = goalPose
+        rospy.loginfo("Sending goal pose to Action Server")
+        self.client.send_goal_and_wait(self.goal, rospy.Duration(30), rospy.Duration(30))
 
-        self.movebase_client()
 
-    def active_cb(self):
-        rospy.loginfo("Goal pose "+str(self.goal_cnt+1)+" is now being processed by the Action Server...")
+def create_2d_pose(x, y , theta):
+    pose = Pose()
+    pose.position.x = x
+    pose.position.y = y
+    pose.position.z = 0.0
 
-    def feedback_cb(self, feedback):
-        pass
-
-    def done_cb(self, status, result):
-        self.goal_cnt += 1 #Increment counter to next goal
-        if status == 2: #Cancel request
-            rospy.loginfo("Goal pose "+str(self.goal_cnt)+" received a cancel request after it started executing, completed execution!")
-
-        if status == 3: #Goal Reached
-            rospy.loginfo("Goal pose "+str(self.goal_cnt)+" reached") 
-            if self.goal_cnt< len(self.pose_seq): 
-                next_goal = MoveBaseGoal()
-                next_goal.target_pose.header.frame_id = "map"
-                next_goal.target_pose.header.stamp = rospy.Time.now()
-                next_goal.target_pose.pose = self.pose_seq[self.goal_cnt]
-                rospy.loginfo("Sending goal pose "+str(self.goal_cnt+1)+" to Action Server")
-                rospy.loginfo(str(next_goal.target_pose.pose.position))
-                self.client.send_goal(next_goal, self.done_cb, self.active_cb, self.feedback_cb) 
-            else:
-                final_time = rospy.Time.now()
-                rospy.loginfo("Final goal pose reached!")
-                rospy.signal_shutdown("Final goal pose reached!")
-                rospy.loginfo("Total Time : %0.2f" % (final_time - self.start_time).to_sec())
-                return
-
-        if status == 4: #Goal was aborted
-            rospy.loginfo("Goal pose "+str(self.goal_cnt)+" was aborted by the Action Server")
-            rospy.signal_shutdown("Goal pose "+str(self.goal_cnt)+" aborted, shutting down!")
-            return
-
-        if status == 5: #Rejected by action server
-            rospy.loginfo("Goal pose "+str(self.goal_cnt)+" has been rejected by the Action Server")
-            rospy.signal_shutdown("Goal pose "+str(self.goal_cnt)+" rejected, shutting down!")
-            return
-
-        if status == 8:
-            rospy.loginfo("Goal pose "+str(self.goal_cnt)+" received a cancel request before it started executing, successfully cancelled!")
-
-    def movebase_client(self):
-        goal = MoveBaseGoal()
-        goal.target_pose.header.frame_id = "map"
-        goal.target_pose.header.stamp = rospy.Time.now() 
-        goal.target_pose.pose = self.pose_seq[self.goal_cnt]
-        rospy.loginfo("Sending goal pose "+str(self.goal_cnt+1)+" to Action Server")
-        rospy.loginfo(str(self.pose_seq[self.goal_cnt].position))
-        self.client.send_goal(goal, self.done_cb, self.active_cb, self.feedback_cb)
-        rospy.spin()
+    q = quaternion_from_euler(0,0, theta)
+    pose.orientation.x = q[0]
+    pose.orientation.y = q[1]
+    pose.orientation.z = q[2]
+    pose.orientation.w = q[3]
+    return pose
 
 if __name__ == '__main__':
     # try:
@@ -110,6 +48,18 @@ if __name__ == '__main__':
     # except rospy.ROSInterruptException:
     #     rospy.loginfo("Navigation finished.")
     rospy.init_node('NavTest')
-    ur5 = Ur5Moveit()
-    ur5.navigationPose()
-    del ur5
+    ebot = Ebot()
+    # ur5 = Ur5Moveit()
+    # ur5.navigationPose()
+    # del ur5
+    start_time = rospy.Time.now()
+    goalPose = create_2d_pose(6.01377, -0.5552, -pi/2)
+    ebot.go_to_pose(goalPose)
+    stop_time = rospy.Time.now()
+    rospy.loginfo("Time Taken %0.4f" % (stop_time-start_time).to_sec())
+
+    start_time = rospy.Time.now()
+    goalPose = create_2d_pose(0, 0, 0)
+    ebot.go_to_pose(goalPose)
+    stop_time = rospy.Time.now()
+    rospy.loginfo("Time Taken %0.4f" % (stop_time-start_time).to_sec())
