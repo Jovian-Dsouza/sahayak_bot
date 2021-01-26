@@ -1,0 +1,4 @@
+<launch>
+    <node name="pclFilter" pkg="perception" type="pclFilter.py"/>
+    <node name="objDetection" pkg="perception" type="objDetection.py" output="screen"/>
+</launch>

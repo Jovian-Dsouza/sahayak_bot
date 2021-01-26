@@ -1,0 +1,32 @@
+<launch>
+  <arg name="gui" default="true"/>
+<!--   ebot -->
+<param name="robot_description" command="$(find xacro)/xacro --inorder '$(find ebot_description)/urdf/ebot_ur5.xacro'"/>
+   
+
+
+<!--   ur5 world -->
+<include file="$(find ebot_gazebo)/launch/lab_packaging.launch" >
+    <arg name="gui" value="$(arg gui)"/>
+</include>
+
+<arg name="x" default="7.66"/>
+<arg name="y" default="2.6"/>
+<arg name="z" default="0.17"/>
+<arg name="r" default="0"/>
+<arg name="p" default="0"/>
+<arg name="ya" default="0"/>		
+
+<!-- Spawn the ur5 robot model -->
+<node name="mybot_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" 
+	args="-urdf -param robot_description -model ebot -x $(arg x) -y $(arg y) -z $(arg z) -R $(arg r) -P $(arg p) -Y $(arg ya)" />
+
+<node pkg="gazebo_ros_link_attacher" name="link_attach" type="attach.py" output="screen"/>
+
+		
+<!-- include moveit launch file and node for pick and place using perception feedback-->
+<include file="$(find pkg_moveit_ebot_ur5)/launch/ur5_bringup_moveit.launch"/>
+<node name="grasping_node" pkg="ebot_mani" type="main.py"/>
+
+  
+</launch>

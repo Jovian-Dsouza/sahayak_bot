@@ -1,4 +1,6 @@
 <launch>
+  <arg name="gui" default="true"/>
+  <arg name="rviz_gui" default="true"/>
 <!--   ebot -->
 <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find ebot_description)/urdf/ebot_ur5.xacro'"/>
    
@@ -24,7 +26,13 @@
 
 		
 <!-- include moveit launch file and node for pick and place using perception feedback-->
-	
+<include file="$(find pkg_moveit_ebot_ur5)/launch/ur5_bringup_moveit.launch">
+  <arg name="rviz_gui" value="$(arg rviz_gui)"/>
+</include>
+
+<node name="homeUr5" pkg="ebot_mani" type="homeUr5.py"/>
+
+<include file="$(find perception)/launch/perception.launch"/>
 
 
 <!-- recording bag file -->

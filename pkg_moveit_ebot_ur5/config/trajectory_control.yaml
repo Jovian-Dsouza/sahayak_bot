@@ -1,0 +1,20 @@
+arm_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+     - elbow_joint 
+     - shoulder_lift_joint 
+     - shoulder_pan_joint 
+     - wrist_1_joint 
+     - wrist_2_joint 
+     - wrist_3_joint 
+  stop_trajectory_duration: 0.5 # Controls the duration of the stop motion
+  state_publish_rate:  25
+  action_monitor_rate: 10
+
+gripper_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+     - gripper_finger1_joint
+  stop_trajectory_duration: 0.5
+  state_publish_rate:  25
+  action_monitor_rate: 10

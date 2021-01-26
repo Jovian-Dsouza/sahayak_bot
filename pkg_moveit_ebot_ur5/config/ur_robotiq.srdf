@@ -1,0 +1,358 @@
+<?xml version="1.0" ?>
+<!--This does not replace URDF, and is not an extension of URDF.
+    This is a format for representing semantic information about the robot structure.
+    A URDF file must exist for this robot as well, where the joints and the links that are referenced are defined
+-->
+<robot name="ebot">
+    <!--GROUPS: Representation of a set of joints and links. This can be useful for specifying DOF to plan for, defining arms, end effectors, etc-->
+    <!--LINKS: When a link is specified, the parent joint of that link (if it exists) is automatically included-->
+    <!--JOINTS: When a joint is specified, the child link of that joint (which will always exist) is automatically included-->
+    <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
+    <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
+    <group name="ur5_planning_group">
+        <joint name="wrist_3_joint" />
+        <joint name="wrist_2_joint" />
+        <joint name="wrist_1_joint" />
+        <joint name="elbow_joint" />
+        <joint name="shoulder_lift_joint" />
+        <joint name="shoulder_pan_joint" />
+    </group>
+    <group name="gripper_planning_group">
+        <joint name="gripper_finger1_joint" />
+    </group>
+    <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
+    <group_state name="openGripper" group="gripper_planning_group">
+        <joint name="gripper_finger1_joint" value="0" />
+    </group_state>
+    <group_state name="homePose" group="ur5_planning_group">
+        <joint name="elbow_joint" value="0" />
+        <joint name="shoulder_lift_joint" value="-0.5901" />
+        <joint name="shoulder_pan_joint" value="0" />
+        <joint name="wrist_1_joint" value="-1.5708" />
+        <joint name="wrist_2_joint" value="-0.5235" />
+        <joint name="wrist_3_joint" value="1.5708" />
+    </group_state>
+    <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
+    <end_effector name="ur5_end_effector" parent_link="gripper_base_link" group="ur5_planning_group" />
+    <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->
+    <passive_joint name="gripper_finger1_inner_knuckle_joint" />
+    <passive_joint name="gripper_finger1_finger_tip_joint" />
+    <passive_joint name="gripper_finger2_inner_knuckle_joint" />
+    <passive_joint name="gripper_finger2_finger_tip_joint" />
+    <passive_joint name="gripper_finger2_joint" />
+    <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
+    <disable_collisions link1="FUS1" link2="FUS2" reason="Never" />
+    <disable_collisions link1="FUS1" link2="FUS3" reason="Never" />
+    <disable_collisions link1="FUS1" link2="FUS4" reason="Never" />
+    <disable_collisions link1="FUS1" link2="FWL" reason="Never" />
+    <disable_collisions link1="FUS1" link2="FWR" reason="Never" />
+    <disable_collisions link1="FUS1" link2="LHUS10" reason="Never" />
+    <disable_collisions link1="FUS1" link2="LHUS9" reason="Never" />
+    <disable_collisions link1="FUS1" link2="RHUS7" reason="Never" />
+    <disable_collisions link1="FUS1" link2="RHUS9" reason="Never" />
+    <disable_collisions link1="FUS1" link2="RUS5" reason="Never" />
+    <disable_collisions link1="FUS1" link2="RUS6" reason="Never" />
+    <disable_collisions link1="FUS1" link2="RWL" reason="Never" />
+    <disable_collisions link1="FUS1" link2="RWR" reason="Never" />
+    <disable_collisions link1="FUS1" link2="base_link" reason="Never" />
+    <disable_collisions link1="FUS1" link2="camera_link" reason="Never" />
+    <disable_collisions link1="FUS1" link2="camera_link2" reason="Never" />
+    <disable_collisions link1="FUS1" link2="ebot_base" reason="Adjacent" />
+    <disable_collisions link1="FUS1" link2="imu_link" reason="Never" />
+    <disable_collisions link1="FUS1" link2="laser" reason="Never" />
+    <disable_collisions link1="FUS1" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="FUS1" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="FUS2" link2="FUS3" reason="Never" />
+    <disable_collisions link1="FUS2" link2="FUS4" reason="Never" />
+    <disable_collisions link1="FUS2" link2="FWL" reason="Never" />
+    <disable_collisions link1="FUS2" link2="FWR" reason="Never" />
+    <disable_collisions link1="FUS2" link2="LHUS10" reason="Never" />
+    <disable_collisions link1="FUS2" link2="LHUS9" reason="Never" />
+    <disable_collisions link1="FUS2" link2="RHUS7" reason="Never" />
+    <disable_collisions link1="FUS2" link2="RHUS9" reason="Never" />
+    <disable_collisions link1="FUS2" link2="RUS5" reason="Never" />
+    <disable_collisions link1="FUS2" link2="RUS6" reason="Never" />
+    <disable_collisions link1="FUS2" link2="RWL" reason="Never" />
+    <disable_collisions link1="FUS2" link2="RWR" reason="Never" />
+    <disable_collisions link1="FUS2" link2="base_link" reason="Never" />
+    <disable_collisions link1="FUS2" link2="camera_link" reason="Never" />
+    <disable_collisions link1="FUS2" link2="camera_link2" reason="Never" />
+    <disable_collisions link1="FUS2" link2="ebot_base" reason="Adjacent" />
+    <disable_collisions link1="FUS2" link2="imu_link" reason="Never" />
+    <disable_collisions link1="FUS2" link2="laser" reason="Never" />
+    <disable_collisions link1="FUS2" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="FUS2" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="FUS3" link2="FUS4" reason="Never" />
+    <disable_collisions link1="FUS3" link2="FWL" reason="Never" />
+    <disable_collisions link1="FUS3" link2="FWR" reason="Never" />
+    <disable_collisions link1="FUS3" link2="LHUS10" reason="Never" />
+    <disable_collisions link1="FUS3" link2="LHUS9" reason="Never" />
+    <disable_collisions link1="FUS3" link2="RHUS7" reason="Never" />
+    <disable_collisions link1="FUS3" link2="RHUS9" reason="Never" />
+    <disable_collisions link1="FUS3" link2="RUS5" reason="Never" />
+    <disable_collisions link1="FUS3" link2="RUS6" reason="Never" />
+    <disable_collisions link1="FUS3" link2="RWL" reason="Never" />
+    <disable_collisions link1="FUS3" link2="RWR" reason="Never" />
+    <disable_collisions link1="FUS3" link2="base_link" reason="Never" />
+    <disable_collisions link1="FUS3" link2="camera_link" reason="Never" />
+    <disable_collisions link1="FUS3" link2="ebot_base" reason="Adjacent" />
+    <disable_collisions link1="FUS3" link2="imu_link" reason="Never" />
+    <disable_collisions link1="FUS3" link2="laser" reason="Never" />
+    <disable_collisions link1="FUS3" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="FUS3" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="FUS4" link2="FWL" reason="Never" />
+    <disable_collisions link1="FUS4" link2="FWR" reason="Never" />
+    <disable_collisions link1="FUS4" link2="LHUS10" reason="Never" />
+    <disable_collisions link1="FUS4" link2="LHUS9" reason="Never" />
+    <disable_collisions link1="FUS4" link2="RHUS7" reason="Never" />
+    <disable_collisions link1="FUS4" link2="RHUS9" reason="Never" />
+    <disable_collisions link1="FUS4" link2="RUS5" reason="Never" />
+    <disable_collisions link1="FUS4" link2="RUS6" reason="Never" />
+    <disable_collisions link1="FUS4" link2="RWL" reason="Never" />
+    <disable_collisions link1="FUS4" link2="RWR" reason="Never" />
+    <disable_collisions link1="FUS4" link2="base_link" reason="Never" />
+    <disable_collisions link1="FUS4" link2="camera_link" reason="Never" />
+    <disable_collisions link1="FUS4" link2="ebot_base" reason="Adjacent" />
+    <disable_collisions link1="FUS4" link2="imu_link" reason="Never" />
+    <disable_collisions link1="FUS4" link2="laser" reason="Never" />
+    <disable_collisions link1="FUS4" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="FUS4" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="FWL" link2="FWR" reason="Never" />
+    <disable_collisions link1="FWL" link2="LHUS10" reason="Never" />
+    <disable_collisions link1="FWL" link2="LHUS9" reason="Never" />
+    <disable_collisions link1="FWL" link2="RHUS7" reason="Never" />
+    <disable_collisions link1="FWL" link2="RHUS9" reason="Never" />
+    <disable_collisions link1="FWL" link2="RUS5" reason="Never" />
+    <disable_collisions link1="FWL" link2="RUS6" reason="Never" />
+    <disable_collisions link1="FWL" link2="RWL" reason="Never" />
+    <disable_collisions link1="FWL" link2="RWR" reason="Never" />
+    <disable_collisions link1="FWL" link2="base_link" reason="Never" />
+    <disable_collisions link1="FWL" link2="camera_link" reason="Never" />
+    <disable_collisions link1="FWL" link2="ebot_base" reason="Adjacent" />
+    <disable_collisions link1="FWL" link2="imu_link" reason="Never" />
+    <disable_collisions link1="FWL" link2="laser" reason="Never" />
+    <disable_collisions link1="FWL" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="FWL" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="FWR" link2="LHUS10" reason="Never" />
+    <disable_collisions link1="FWR" link2="LHUS9" reason="Never" />
+    <disable_collisions link1="FWR" link2="RHUS7" reason="Never" />
+    <disable_collisions link1="FWR" link2="RHUS9" reason="Never" />
+    <disable_collisions link1="FWR" link2="RUS5" reason="Never" />
+    <disable_collisions link1="FWR" link2="RUS6" reason="Never" />
+    <disable_collisions link1="FWR" link2="RWL" reason="Never" />
+    <disable_collisions link1="FWR" link2="RWR" reason="Never" />
+    <disable_collisions link1="FWR" link2="base_link" reason="Never" />
+    <disable_collisions link1="FWR" link2="camera_link" reason="Never" />
+    <disable_collisions link1="FWR" link2="ebot_base" reason="Adjacent" />
+    <disable_collisions link1="FWR" link2="imu_link" reason="Never" />
+    <disable_collisions link1="FWR" link2="laser" reason="Never" />
+    <disable_collisions link1="FWR" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="FWR" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="LHUS10" link2="LHUS9" reason="Never" />
+    <disable_collisions link1="LHUS10" link2="RHUS7" reason="Never" />
+    <disable_collisions link1="LHUS10" link2="RHUS9" reason="Never" />
+    <disable_collisions link1="LHUS10" link2="RUS5" reason="Never" />
+    <disable_collisions link1="LHUS10" link2="RUS6" reason="Never" />
+    <disable_collisions link1="LHUS10" link2="RWL" reason="Never" />
+    <disable_collisions link1="LHUS10" link2="RWR" reason="Never" />
+    <disable_collisions link1="LHUS10" link2="base_link" reason="Never" />
+    <disable_collisions link1="LHUS10" link2="camera_link" reason="Never" />
+    <disable_collisions link1="LHUS10" link2="ebot_base" reason="Adjacent" />
+    <disable_collisions link1="LHUS10" link2="imu_link" reason="Never" />
+    <disable_collisions link1="LHUS10" link2="laser" reason="Never" />
+    <disable_collisions link1="LHUS10" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="LHUS9" link2="RHUS7" reason="Never" />
+    <disable_collisions link1="LHUS9" link2="RHUS9" reason="Never" />
+    <disable_collisions link1="LHUS9" link2="RUS5" reason="Never" />
+    <disable_collisions link1="LHUS9" link2="RUS6" reason="Never" />
+    <disable_collisions link1="LHUS9" link2="RWL" reason="Never" />
+    <disable_collisions link1="LHUS9" link2="RWR" reason="Never" />
+    <disable_collisions link1="LHUS9" link2="base_link" reason="Never" />
+    <disable_collisions link1="LHUS9" link2="camera_link" reason="Never" />
+    <disable_collisions link1="LHUS9" link2="ebot_base" reason="Adjacent" />
+    <disable_collisions link1="LHUS9" link2="imu_link" reason="Never" />
+    <disable_collisions link1="LHUS9" link2="laser" reason="Never" />
+    <disable_collisions link1="LHUS9" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="RHUS7" link2="RHUS9" reason="Never" />
+    <disable_collisions link1="RHUS7" link2="RUS5" reason="Never" />
+    <disable_collisions link1="RHUS7" link2="RUS6" reason="Never" />
+    <disable_collisions link1="RHUS7" link2="RWL" reason="Never" />
+    <disable_collisions link1="RHUS7" link2="RWR" reason="Never" />
+    <disable_collisions link1="RHUS7" link2="base_link" reason="Never" />
+    <disable_collisions link1="RHUS7" link2="camera_link" reason="Never" />
+    <disable_collisions link1="RHUS7" link2="ebot_base" reason="Adjacent" />
+    <disable_collisions link1="RHUS7" link2="imu_link" reason="Never" />
+    <disable_collisions link1="RHUS7" link2="laser" reason="Never" />
+    <disable_collisions link1="RHUS7" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="RHUS9" link2="RUS5" reason="Never" />
+    <disable_collisions link1="RHUS9" link2="RUS6" reason="Never" />
+    <disable_collisions link1="RHUS9" link2="RWL" reason="Never" />
+    <disable_collisions link1="RHUS9" link2="RWR" reason="Never" />
+    <disable_collisions link1="RHUS9" link2="base_link" reason="Never" />
+    <disable_collisions link1="RHUS9" link2="camera_link" reason="Never" />
+    <disable_collisions link1="RHUS9" link2="ebot_base" reason="Adjacent" />
+    <disable_collisions link1="RHUS9" link2="imu_link" reason="Never" />
+    <disable_collisions link1="RHUS9" link2="laser" reason="Never" />
+    <disable_collisions link1="RHUS9" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="RUS5" link2="RUS6" reason="Never" />
+    <disable_collisions link1="RUS5" link2="RWL" reason="Never" />
+    <disable_collisions link1="RUS5" link2="RWR" reason="Never" />
+    <disable_collisions link1="RUS5" link2="base_link" reason="Never" />
+    <disable_collisions link1="RUS5" link2="camera_link" reason="Never" />
+    <disable_collisions link1="RUS5" link2="ebot_base" reason="Adjacent" />
+    <disable_collisions link1="RUS5" link2="imu_link" reason="Never" />
+    <disable_collisions link1="RUS5" link2="laser" reason="Never" />
+    <disable_collisions link1="RUS5" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="RUS5" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="RUS6" link2="RWL" reason="Never" />
+    <disable_collisions link1="RUS6" link2="RWR" reason="Never" />
+    <disable_collisions link1="RUS6" link2="base_link" reason="Never" />
+    <disable_collisions link1="RUS6" link2="camera_link" reason="Never" />
+    <disable_collisions link1="RUS6" link2="ebot_base" reason="Adjacent" />
+    <disable_collisions link1="RUS6" link2="imu_link" reason="Never" />
+    <disable_collisions link1="RUS6" link2="laser" reason="Never" />
+    <disable_collisions link1="RUS6" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="RUS6" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="RWL" link2="RWR" reason="Never" />
+    <disable_collisions link1="RWL" link2="base_link" reason="Never" />
+    <disable_collisions link1="RWL" link2="camera_link" reason="Never" />
+    <disable_collisions link1="RWL" link2="ebot_base" reason="Adjacent" />
+    <disable_collisions link1="RWL" link2="imu_link" reason="Never" />
+    <disable_collisions link1="RWL" link2="laser" reason="Never" />
+    <disable_collisions link1="RWL" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="RWL" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="RWR" link2="base_link" reason="Never" />
+    <disable_collisions link1="RWR" link2="camera_link" reason="Never" />
+    <disable_collisions link1="RWR" link2="ebot_base" reason="Adjacent" />
+    <disable_collisions link1="RWR" link2="imu_link" reason="Never" />
+    <disable_collisions link1="RWR" link2="laser" reason="Never" />
+    <disable_collisions link1="RWR" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="RWR" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="base_link" link2="camera_link" reason="Never" />
+    <disable_collisions link1="base_link" link2="ebot_base" reason="Adjacent" />
+    <disable_collisions link1="base_link" link2="imu_link" reason="Never" />
+    <disable_collisions link1="base_link" link2="laser" reason="Never" />
+    <disable_collisions link1="base_link" link2="shoulder_link" reason="Adjacent" />
+    <disable_collisions link1="base_link" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="base_link" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="camera_link" link2="camera_link2" reason="Never" />
+    <disable_collisions link1="camera_link" link2="ebot_base" reason="Adjacent" />
+    <disable_collisions link1="camera_link" link2="ee_link" reason="Never" />
+    <disable_collisions link1="camera_link" link2="gripper_finger1_finger_link" reason="Never" />
+    <disable_collisions link1="camera_link" link2="gripper_finger1_finger_tip_link" reason="Never" />
+    <disable_collisions link1="camera_link" link2="gripper_finger1_inner_knuckle_link" reason="Never" />
+    <disable_collisions link1="camera_link" link2="gripper_finger1_knuckle_link" reason="Never" />
+    <disable_collisions link1="camera_link" link2="gripper_finger2_finger_tip_link" reason="Never" />
+    <disable_collisions link1="camera_link" link2="gripper_finger2_inner_knuckle_link" reason="Never" />
+    <disable_collisions link1="camera_link" link2="imu_link" reason="Never" />
+    <disable_collisions link1="camera_link" link2="laser" reason="Never" />
+    <disable_collisions link1="camera_link" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="camera_link" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="camera_link2" link2="ee_link" reason="Never" />
+    <disable_collisions link1="camera_link2" link2="gripper_base_link" reason="Never" />
+    <disable_collisions link1="camera_link2" link2="gripper_finger1_finger_link" reason="Never" />
+    <disable_collisions link1="camera_link2" link2="gripper_finger1_finger_tip_link" reason="Never" />
+    <disable_collisions link1="camera_link2" link2="gripper_finger1_inner_knuckle_link" reason="Never" />
+    <disable_collisions link1="camera_link2" link2="gripper_finger1_knuckle_link" reason="Never" />
+    <disable_collisions link1="camera_link2" link2="gripper_finger2_finger_link" reason="Never" />
+    <disable_collisions link1="camera_link2" link2="gripper_finger2_finger_tip_link" reason="Never" />
+    <disable_collisions link1="camera_link2" link2="gripper_finger2_inner_knuckle_link" reason="Never" />
+    <disable_collisions link1="camera_link2" link2="gripper_finger2_knuckle_link" reason="Never" />
+    <disable_collisions link1="camera_link2" link2="imu_link" reason="Never" />
+    <disable_collisions link1="camera_link2" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="camera_link2" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="camera_link2" link2="wrist_3_link" reason="Adjacent" />
+    <disable_collisions link1="ebot_base" link2="imu_link" reason="Adjacent" />
+    <disable_collisions link1="ebot_base" link2="laser" reason="Adjacent" />
+    <disable_collisions link1="ebot_base" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="ee_link" link2="gripper_base_link" reason="Never" />
+    <disable_collisions link1="ee_link" link2="gripper_finger1_finger_link" reason="Never" />
+    <disable_collisions link1="ee_link" link2="gripper_finger1_finger_tip_link" reason="Never" />
+    <disable_collisions link1="ee_link" link2="gripper_finger1_inner_knuckle_link" reason="Never" />
+    <disable_collisions link1="ee_link" link2="gripper_finger1_knuckle_link" reason="Never" />
+    <disable_collisions link1="ee_link" link2="gripper_finger2_finger_link" reason="Never" />
+    <disable_collisions link1="ee_link" link2="gripper_finger2_finger_tip_link" reason="Never" />
+    <disable_collisions link1="ee_link" link2="gripper_finger2_inner_knuckle_link" reason="Never" />
+    <disable_collisions link1="ee_link" link2="gripper_finger2_knuckle_link" reason="Never" />
+    <disable_collisions link1="ee_link" link2="imu_link" reason="Never" />
+    <disable_collisions link1="ee_link" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="ee_link" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="ee_link" link2="wrist_3_link" reason="Adjacent" />
+    <disable_collisions link1="forearm_link" link2="upper_arm_link" reason="Adjacent" />
+    <disable_collisions link1="forearm_link" link2="wrist_1_link" reason="Adjacent" />
+    <disable_collisions link1="gripper_base_link" link2="gripper_finger1_finger_link" reason="Never" />
+    <disable_collisions link1="gripper_base_link" link2="gripper_finger1_finger_tip_link" reason="Never" />
+    <disable_collisions link1="gripper_base_link" link2="gripper_finger1_inner_knuckle_link" reason="Adjacent" />
+    <disable_collisions link1="gripper_base_link" link2="gripper_finger1_knuckle_link" reason="Adjacent" />
+    <disable_collisions link1="gripper_base_link" link2="gripper_finger2_finger_link" reason="Never" />
+    <disable_collisions link1="gripper_base_link" link2="gripper_finger2_finger_tip_link" reason="Never" />
+    <disable_collisions link1="gripper_base_link" link2="gripper_finger2_inner_knuckle_link" reason="Adjacent" />
+    <disable_collisions link1="gripper_base_link" link2="gripper_finger2_knuckle_link" reason="Adjacent" />
+    <disable_collisions link1="gripper_base_link" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="gripper_base_link" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="gripper_base_link" link2="wrist_3_link" reason="Adjacent" />
+    <disable_collisions link1="gripper_finger1_finger_link" link2="gripper_finger1_finger_tip_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_finger_link" link2="gripper_finger1_inner_knuckle_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_finger_link" link2="gripper_finger1_knuckle_link" reason="Adjacent" />
+    <disable_collisions link1="gripper_finger1_finger_link" link2="gripper_finger2_finger_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_finger_link" link2="gripper_finger2_finger_tip_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_finger_link" link2="gripper_finger2_inner_knuckle_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_finger_link" link2="gripper_finger2_knuckle_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_finger_link" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_finger_link" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_finger_link" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_finger_tip_link" link2="gripper_finger1_inner_knuckle_link" reason="Adjacent" />
+    <disable_collisions link1="gripper_finger1_finger_tip_link" link2="gripper_finger1_knuckle_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_finger_tip_link" link2="gripper_finger2_finger_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_finger_tip_link" link2="gripper_finger2_finger_tip_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_finger_tip_link" link2="gripper_finger2_inner_knuckle_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_finger_tip_link" link2="gripper_finger2_knuckle_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_finger_tip_link" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_finger_tip_link" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_finger_tip_link" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_inner_knuckle_link" link2="gripper_finger1_knuckle_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_inner_knuckle_link" link2="gripper_finger2_finger_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_inner_knuckle_link" link2="gripper_finger2_finger_tip_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_inner_knuckle_link" link2="gripper_finger2_inner_knuckle_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_inner_knuckle_link" link2="gripper_finger2_knuckle_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_inner_knuckle_link" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_inner_knuckle_link" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_inner_knuckle_link" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_knuckle_link" link2="gripper_finger2_finger_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_knuckle_link" link2="gripper_finger2_finger_tip_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_knuckle_link" link2="gripper_finger2_inner_knuckle_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_knuckle_link" link2="gripper_finger2_knuckle_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_knuckle_link" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_knuckle_link" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="gripper_finger1_knuckle_link" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="gripper_finger2_finger_link" link2="gripper_finger2_finger_tip_link" reason="Never" />
+    <disable_collisions link1="gripper_finger2_finger_link" link2="gripper_finger2_inner_knuckle_link" reason="Never" />
+    <disable_collisions link1="gripper_finger2_finger_link" link2="gripper_finger2_knuckle_link" reason="Adjacent" />
+    <disable_collisions link1="gripper_finger2_finger_link" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="gripper_finger2_finger_link" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="gripper_finger2_finger_link" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="gripper_finger2_finger_tip_link" link2="gripper_finger2_inner_knuckle_link" reason="Adjacent" />
+    <disable_collisions link1="gripper_finger2_finger_tip_link" link2="gripper_finger2_knuckle_link" reason="Never" />
+    <disable_collisions link1="gripper_finger2_finger_tip_link" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="gripper_finger2_finger_tip_link" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="gripper_finger2_finger_tip_link" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="gripper_finger2_inner_knuckle_link" link2="gripper_finger2_knuckle_link" reason="Never" />
+    <disable_collisions link1="gripper_finger2_inner_knuckle_link" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="gripper_finger2_inner_knuckle_link" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="gripper_finger2_inner_knuckle_link" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="gripper_finger2_knuckle_link" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="gripper_finger2_knuckle_link" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="gripper_finger2_knuckle_link" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="imu_link" link2="laser" reason="Never" />
+    <disable_collisions link1="imu_link" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="imu_link" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="imu_link" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="imu_link" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="imu_link" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="laser" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="shoulder_link" link2="upper_arm_link" reason="Adjacent" />
+    <disable_collisions link1="shoulder_link" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="wrist_1_link" link2="wrist_2_link" reason="Adjacent" />
+    <disable_collisions link1="wrist_1_link" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="wrist_2_link" link2="wrist_3_link" reason="Adjacent" />
+</robot>
