@@ -3,7 +3,7 @@
   <world name="default">
 
    <scene>
-	<shadows>0</shadows>
+<shadows>0</shadows>
   </scene>
 
     <plugin name="ros_link_attacher_plugin" filename="libgazebo_ros_link_attacher.so"/>
@@ -26,16 +26,19 @@
     <include>
      <pose frame=''>6.99 3.37 0.87 0 0 0</pose> 
       <uri>model://dropbox</uri>
+      <name>DropBox2</name>
     </include>
 
     <include>
      <pose frame=''>5.61 -1.16 0.87 0 0 0</pose> 
       <uri>model://dropbox</uri>
+      <name>DropBox1</name>
     </include>
 
     <include>
      <pose frame=''>11.64 9.51 0.87 0 0 0</pose> 
       <uri>model://dropbox</uri>
+      <name>DropBox3</name>
     </include>
 
 
