@@ -83,10 +83,10 @@ def get_normals(pcl_cloud_rgb):
 def extract_feature(pcl_cluster):
     ros_cluster = pcl_to_ros(pcl_cluster)
     chists = compute_color_histograms(ros_cluster, using_hsv=True)
-    # normals = get_normals(pcl_cluster)
-    # nhists = compute_normal_histograms(normals)
-    # feature = np.concatenate((chists, nhists))
-    return chists
+    normals = get_normals(pcl_cluster)
+    nhists = compute_normal_histograms(normals)
+    feature = np.concatenate((chists, nhists))
+    return  feature 
 
 def plot_hist(features, nbins=32):
     plt.hist(features, nbins)

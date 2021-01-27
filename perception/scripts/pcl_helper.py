@@ -69,3 +69,15 @@ def float_to_rgb(float_rgb):
     color = [r,g,b]
 			
     return color
+
+def XYZRGB_to_XYZ(XYZRGB_cloud):
+    """ removes color from point cloud
+    """
+    XYZ_cloud = pcl.PointCloud()
+    points_list = []
+
+    for data in XYZRGB_cloud:
+        points_list.append([data[0], data[1], data[2]])
+
+    XYZ_cloud.from_list(points_list)
+    return XYZ_cloud

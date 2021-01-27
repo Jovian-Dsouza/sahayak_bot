@@ -62,6 +62,7 @@ def scan(model):
         # Extract histogram features
         feature = extract_feature(pcl_cloud)
         labeled_features.append([feature, real_model_name])
+        rospy.loginfo("Scan Saved " + real_model_name + " : "+ str(i))
 
         delete_model(model)
         rospy.sleep(0.5)
