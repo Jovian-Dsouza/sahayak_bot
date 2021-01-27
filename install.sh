@@ -23,11 +23,13 @@ pip install numpy
 
 sudo apt-get update -y
 sudo apt-get install libpcl-dev -y
+sudo apt-get install pcl-tools -y
 
 mkdir ~/python-pcl && cd ~/python-pcl
 git clone https://github.com/Jovian-Dsouza/python-pcl.git
 cd ~/python-pcl/python-pcl
 python setup.py build
+python setup.py build_ext -i
 sudo python setup.py install
 sudo rm -r ~/python-pcl 
 
