@@ -1,13 +1,16 @@
 <launch>
   <arg name="gui" default="true"/>
   <arg name="rviz_gui" default="true"/>
+
 <!--   ebot -->
 <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find ebot_description)/urdf/ebot_ur5.xacro'"/>
    
 
 
 <!--   ur5 world -->
-<include file="$(find ebot_gazebo)/launch/lab_packaging.launch" />
+<include file="$(find ebot_gazebo)/launch/lab_packaging.launch" >
+  <arg name="world" value="$(find ebot_gazebo)/worlds/lab_packaging_cam1.world"/>
+</include>
 
 <arg name="x" default="7.66"/>
 <arg name="y" default="2.6"/>

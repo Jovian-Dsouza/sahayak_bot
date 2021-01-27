@@ -9,6 +9,7 @@ from tf.transformations import quaternion_from_euler
 
 from pcl_helper import *
 from feature_helper import extract_feature
+from objDetection import DetectObjectTrain
 
 from gazebo_msgs.srv import GetPhysicsProperties
 from gazebo_msgs.srv import SetPhysicsProperties
@@ -34,52 +35,29 @@ def initial_setup():
     rospy.wait_for_service('gazebo/spawn_sdf_model')
     rospy.loginfo("Connected to all services!")
 
-    get_physics_properties_prox = rospy.ServiceProxy('gazebo/get_physics_properties', GetPhysicsProperties)
-    physics_properties = get_physics_properties_prox()
+    # get_physics_properties_prox = rospy.ServiceProxy('gazebo/get_physics_properties', GetPhysicsProperties)
+    # physics_properties = get_physics_properties_prox()
 
-    physics_properties.gravity.z = 0
+    # physics_properties.gravity.z = 0
 
-    set_physics_properties_prox = rospy.ServiceProxy('gazebo/set_physics_properties', SetPhysicsProperties)
-    set_physics_properties_prox(physics_properties.time_step,
-                                physics_properties.max_update_rate,
-                                physics_properties.gravity,
-                                physics_properties.ode_config)
+    # set_physics_properties_prox = rospy.ServiceProxy('gazebo/set_physics_properties', SetPhysicsProperties)
+    # set_physics_properties_prox(physics_properties.time_step,
+    #                             physics_properties.max_update_rate,
+    #                             physics_properties.gravity,
+    #                             physics_properties.ode_config)
 
 
     delete_model_prox = rospy.ServiceProxy('gazebo/delete_model', DeleteModel)
-    delete_model_prox('ground_plane')
-    delete_model_prox('office')
+    # delete_model_prox('ground_plane')
+    # delete_model_prox('office')
     delete_model_prox('dropbox')
-    delete_model_prox('table')
+    # delete_model_prox('table')
     delete_model_prox('coke_can')
     delete_model_prox('glue')
     delete_model_prox('battery')
     rospy.sleep(1)
 
-def spawn_model(model_name):
-    spawn_srv = rospy.ServiceProxy('/gazebo/spawn_sdf_model', SpawnModel)
-    rospy.loginfo("Spawning " + model_name)
-    model_path = rospkg.RosPack().get_path('ebot_gazebo') \
-                    + '/models/' + model_name + '/model.sdf'
-    
-    with open(model_path , 'r') as xml_file:
-        model = xml_file.read()
-    
-    req = SpawnModelRequest()
-    req.model_name = 'training_model'
-    req.model_xml = model
-    req.initial_pose.position.x = 7.971279
-    req.initial_pose.position.y = 3.393928
-    req.initial_pose.position.z = 0.867628
 
-    q = quaternion_from_euler(0, 0, random.uniform(0, 2*math.pi))
-    req.initial_pose.orientation.x = q[0]
-    req.initial_pose.orientation.y = q[1]
-    req.initial_pose.orientation.z = q[2]
-    req.initial_pose.orientation.w = q[3]
-
-    spawn_srv.call(req)
-    rospy.sleep(0.5)
 
 def create_pose_random_orient(x, y, z):
     '''
@@ -102,6 +80,23 @@ def random_pose(x_min, x_max , y_min, y_max, z=0.9):
     y = random.uniform(y_min, y_max)
     return create_pose_random_orient(x, y, z)
 
+def spawn_model(model_name):
+    spawn_srv = rospy.ServiceProxy('/gazebo/spawn_sdf_model', SpawnModel)
+    rospy.loginfo("Spawning " + model_name)
+    model_path = rospkg.RosPack().get_path('ebot_gazebo') \
+                    + '/models/' + model_name + '/model.sdf'
+    
+    with open(model_path , 'r') as xml_file:
+        model = xml_file.read()
+    
+    req = SpawnModelRequest()
+    req.model_name = 'training_model'
+    req.model_xml = model
+    req.initial_pose = create_pose_random_orient(7.971279, 3.2,  1.0)
+
+    spawn_srv.call(req)
+    rospy.sleep(1)
+
 def random_orient():
     '''
     Sets random orientation
@@ -111,7 +106,8 @@ def random_orient():
 
     set_model_state_prox = rospy.ServiceProxy('gazebo/set_model_state', SetModelState)
 
-    model_state.pose = random_pose(7.7, 8.1, 3.2, 4)
+    # model_state.pose = random_pose(7.7, 8.1, 3.2, 4)
+    model_state.pose = create_pose_random_orient(7.971279, 3.2,  1.0)
 
     sms_req = SetModelStateRequest()
     sms_req.model_state.pose = model_state.pose
@@ -131,10 +127,19 @@ if __name__ == '__main__':
     rospy.init_node('capture_node')
 
     n_scans_per_object = 20
-    models = ['coke_can', 'glue', 'battery']
+    models = ['coke_can', 'adhesive', 'robot_wheels', 'eYIFI', 'soap', 'water_glass', 'soap2' , 'glue']
+    realName_dict = {'robot_wheels' : 'robot_wheels' , 
+                     'eYIFI' : 'eYFi_board', 
+                     'soap' : 'FPGA_board' ,  
+                     'coke_can' : 'coke_can', 
+                     'water_glass': 'water_glass', 
+                     'adhesive' : 'adhesive', 
+                     'soap2' : 'battery' , 
+                     'glue' : 'glue'}
 
     # Disable gravity and delete the ground plane
     initial_setup()
+    detect = DetectObjectTrain()
     labeled_features = []
 
     
@@ -147,8 +152,8 @@ if __name__ == '__main__':
             try_count = 0
             while not sample_was_good and try_count < 5:
                 random_orient()
-                rospy.sleep(0.5)
-                ros_cloud = capture_sample()
+                rospy.sleep(5)
+                ros_cloud = detect.ros_cloud #capture_sample()
                 pcl_cloud = ros_to_pcl(ros_cloud)
                 pcl_cloud_arr = pcl_cloud.to_array()
 
@@ -161,10 +166,12 @@ if __name__ == '__main__':
 
             # Extract histogram features
             feature = extract_feature(pcl_cloud)
-            labeled_features.append([feature, model_name])
+            real_model_name = realName_dict[model_name]
+            labeled_features.append([feature, real_model_name])
 
         delete_model()
+        rospy.sleep(1)
 
 
-    pickle.dump(labeled_features, open('training_data.sav', 'wb'))
+    pickle.dump(labeled_features, open('svm/training_data.sav', 'wb'))
 

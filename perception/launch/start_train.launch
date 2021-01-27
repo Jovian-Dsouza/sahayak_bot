@@ -1,0 +1,12 @@
+<launch>
+
+<node pkg="gazebo_ros_link_attacher" name="link_attach" type="attach.py" output="screen"/>
+<node name="grasping_node" pkg="ebot_mani" type="homeUr5.py"/>
+
+<arg name="node_start_delay" default="6.0" />  
+<node name="train_node" pkg="perception" type="generate_training_svm.py" output="screen" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' " />
+
+<!-- <node name="train_node" pkg="perception" type="generate_training_svm.py" output="screen"/> -->
+
+  
+</launch>

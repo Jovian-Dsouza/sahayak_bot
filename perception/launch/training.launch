@@ -21,12 +21,13 @@
 <node name="mybot_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" 
 	args="-urdf -param robot_description -model ebot -x $(arg x) -y $(arg y) -z $(arg z) -R $(arg r) -P $(arg p) -Y $(arg ya)" />
 
-<node pkg="gazebo_ros_link_attacher" name="link_attach" type="attach.py" output="screen"/>
+<node name="pclFilter" pkg="perception" type="pclFilter.py"/>
 
-		
 <!-- include moveit launch file and node for pick and place using perception feedback-->
 <include file="$(find pkg_moveit_ebot_ur5)/launch/ur5_bringup_moveit.launch"/>
-<node name="grasping_node" pkg="ebot_mani" type="main.py"/>
+
+<!-- <node pkg="gazebo_ros_link_attacher" name="link_attach" type="attach.py" output="screen"/>
+<node name="grasping_node" pkg="ebot_mani" type="homeUr5.py"/> -->
 
   
 </launch>

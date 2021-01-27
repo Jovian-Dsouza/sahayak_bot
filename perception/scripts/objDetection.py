@@ -107,6 +107,44 @@ class DetectObject:
 
         return EmptyResponse()
 
+class DetectObjectTrain:
+    def __init__(self):
+        rospy.Subscriber('/pcl_objects', PointCloud2, self.callback, queue_size=1)
+        # self.detection_info_pub = rospy.Publisher("/detection_info", ObjectPose, latch=True, queue_size=1)
+        # self.service = rospy.Service('detect', Empty, self.detect)
+
+    def callback(self, msg):
+        self.ros_cloud = msg
+    
+    def detect(self):
+        self.pcl_cloud = ros_to_pcl(self.ros_cloud)
+        cluster_indices = euclidiean_cluster(self.pcl_cloud)
+
+        detected_obj = []
+
+        for pts_list in cluster_indices:
+            pcl_cluster_arr = self.pcl_cloud.extract(pts_list).to_array()
+
+            centroid = np.mean(pcl_cluster_arr , axis=0)[:3]
+            centroid_point = Point()
+            centroid_point.x = np.asscalar(centroid[0])
+            centroid_point.y = np.asscalar(centroid[1])
+            centroid_point.z = np.asscalar(centroid[2])
+            c = centroid_point
+
+            max_val = np.max(pcl_cluster_arr, axis=0)[:2]
+            min_val = np.min(pcl_cluster_arr, axis=0)[:2]
+
+            x1, y1 = mapToImage(min_val[0], min_val[1], centroid[2])
+            x2, y2 = mapToImage(max_val[0], max_val[1], centroid[2])
+
+            #width = np.asscalar(max_val[0] - min_val[0])
+            # print("%d, %d, %d, %d %0.5f" % (x1, y1, x2, y2, width))
+            detected_obj.append([x1, y1, x2, y2])
+
+        return detected_obj
+
+
 def obj_detect_train(): #Function only used for training script
     #DEPRECATED - was used for tensorflow classification
     cloud_objects = ros_to_pcl(rospy.wait_for_message('/pcl_objects', PointCloud2))

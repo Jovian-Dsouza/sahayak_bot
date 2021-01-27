@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import rospkg
 import pickle
 import itertools
 import numpy as np
@@ -101,7 +102,8 @@ clf.fit(X=X_train, y=y_train)
 model = {'classifier': clf, 'classes': encoder.classes_, 'scaler': X_scaler}
 
 # Save classifier to disk
-pickle.dump(model, open('model.sav', 'wb'))
+model_path = rospkg.RosPack().get_path('perception') + '/models/' + 'SVMmodel.sav'
+pickle.dump(model, open(model_path, 'wb'))
 
 # Plot non-normalized confusion matrix
 plt.figure()
