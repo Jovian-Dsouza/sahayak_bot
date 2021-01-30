@@ -25,14 +25,15 @@
 
 
 
-<node pkg="ebot_gazebo" name="ebot_gazebo" type="task4_spawn_models.pyc" output="screen"/>
-
+<!-- <node pkg="ebot_gazebo" name="ebot_gazebo" type="task4_spawn_models.pyc" output="screen"/> -->
+<!-- <node name="brakes" pkg="gazebo_ros_link_attacher" type="attach.py"/> -->
 		
 <!-- include moveit launch file and node for pick and place using perception feedback-->
 <include file="$(find pkg_moveit_ebot_ur5)/launch/ur5_bringup_moveit.launch">
   <arg name="rviz_gui" value="$(arg rviz_gui)"/>
 </include>
 
+<node name="brakes" pkg="gazebo_ros_link_attacher" type="attach.py"/>
 <node name="homeUr5" pkg="ebot_mani" type="homeUr5.py"/>
 
 <include file="$(find perception)/launch/perception.launch"/>

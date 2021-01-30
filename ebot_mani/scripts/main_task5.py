@@ -26,6 +26,15 @@ def roll_angle_to_quaternion(roll_angle):
     o.x , o.y, o.z, o.w = q[0], q[1], q[2], q[3]
     return o
 
+def angle_to_quaternion(roll, yaw):
+    '''Returns a quaternion from roll angle(in deg)'''
+    roll_angle = (math.pi/180) * roll
+    yaw_angle = (math.pi/180) * yaw
+    q = quaternion_from_euler(-math.pi+roll_angle, 0 , -math.pi+yaw_angle)
+    o = Quaternion()
+    o.x , o.y, o.z, o.w = q[0], q[1], q[2], q[3]
+    return o
+
 class Detect():
     def __init__(self):
         self.dict = {}
@@ -86,6 +95,32 @@ class Ur5(Ur5Moveit):
         graspPose.position.z += 0.2
         self.go_to_pose(graspPose)
 
+    def graspEYIFI(self, point, yaw=90):
+        graspPose = Pose()
+        graspPose.position = point
+        graspPose.position.x -= 0
+        graspPose.position.y += 0.0145
+        graspPose.position.z += 0.12
+        graspPose.orientation = angle_to_quaternion(90, yaw)
+        
+        #Front of object 
+        graspPose.position.z += 0.2
+        ur5.go_to_pose(graspPose)
+
+        
+        h = 0.07
+        # #Approach from z axis
+        graspPose.position.z -= h
+        ur5.go_to_pose(graspPose)
+        
+        # #Grasp
+        ur5.closeGripper(0.46) 
+        rospy.sleep(1)
+
+        # #retreat from z axis
+        graspPose.position.z += h
+        ur5.go_to_pose(graspPose)
+
 def main():
     pickup_list = ['coke_can', 'battery', 'glue'] #Order in which to pickup items
     w_dict = {'coke_can': 0.27086, 'battery': 0.26500, 'glue' : 0.31}  # calcalated from x2 - x1 + 0.2
@@ -102,15 +137,17 @@ def main():
         ur5.homePose()
         rospy.sleep(0.1)
 
-        
 
 if __name__ == '__main__':
     rospy.init_node('grasping_node')
 
     detect = Detect()
     detect.detect() #Call the detect service
-
-    # ur5 = Ur5()
-    # main()
-    # del ur5
+    ur5 = Ur5()
+    ur5.homePose()
+    ur5.openGripper()
+    ur5.graspEYIFI(detect.dict['eYFi_board'], 90+45)
+    ur5.goToDropBox()
+    ur5.openGripper()
+    del ur5
 

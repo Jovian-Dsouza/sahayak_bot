@@ -115,7 +115,7 @@ if __name__ == '__main__':
     cokePose = create_pose(7.9712791, 3.3939284, 0.8676281, -0.0126091, 0.0003598, 0.0000164, 0.9999204)
     gluePose = create_pose(7.84000000, 3.23928000, 0.86998147, 0.00000075, -0.00000197, 0.50251043, 0.86457115)
     batteryPose = create_pose(8.10856002, 3.23999991, 0.87299210, 0.00001689, 0.00000146, 0.00000001, 1.00000000)
-    eYIFIPose = create_pose_angle(7.9712791, 3.3939284, 0.9, pi+ pi/4)
+    eYIFIPose = create_pose_angle(7.9712791, 3.2, 1, pi+ pi/4)
     # spawn_model('coke_can', cokePose)
     # spawn_model('glue', gluePose)
     # spawn_model('battery', batteryPose)
