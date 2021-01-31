@@ -38,7 +38,7 @@
 
 <include file="$(find perception)/launch/perception.launch"/>
 
-<node name="resetModels" pkg="ebot_mani" type="resetModels.py"/>
+<node name="resetModels" pkg="ebot_main" type="resetModels.py"/>
 
 <!-- recording bag file -->
 <arg name="rec_name" default="task4.bag"/>
