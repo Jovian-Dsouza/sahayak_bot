@@ -77,7 +77,7 @@ def printModelState(model_name):
     print("(%0.8f, %0.8f, %0.8f, %0.8f, %0.8f, %0.8f, %0.8f)" % \
             (p.x, p.y, p.z, q.x, q.y, q.z, q.w))
 
-def delete_all_model(model_list):
+def delete_all_model():
     delete_model_prox = rospy.ServiceProxy('gazebo/delete_model', DeleteModel)
     for model in model_list:
         delete_model_prox(model)
@@ -89,16 +89,14 @@ def random_pose(x_min, x_max , y_min, y_max, z=0.9):
     y = random.uniform(y_min, y_max)
     return create_pose_random_orient(x, y, z)
 
-# def spawn_models_random_pose(model_list):
-#     for model in model_list:
-
-
-if __name__ == '__main__':
-    rospy.init_node('capture_node')
+def wait_for_all_services():
     rospy.wait_for_service('gazebo/get_model_state')
     rospy.wait_for_service('gazebo/set_model_state')
     rospy.wait_for_service('gazebo/spawn_sdf_model')
     rospy.loginfo("Connected to all services!")
+
+if __name__ == '__main__':
+    rospy.init_node('reset_models')
 
     model_list = ['robot_wheels', 'eYIFI', 'soap', 'coke_can', 'water_glass', 'adhesive', 'soap2' , 'glue']
     realName_dict = {'robot_wheels' : 'robot_wheels' , 
@@ -109,20 +107,21 @@ if __name__ == '__main__':
                      'adhesive' : 'adhesive', 
                      'soap2' : 'battery' , 
                      'glue' : 'glue'}
-
-    delete_all_model(model_list)
+    
+    wait_for_all_services()
+    delete_all_model()
 
     cokePose = create_pose(7.9712791, 3.3939284, 0.8676281, -0.0126091, 0.0003598, 0.0000164, 0.9999204)
     gluePose = create_pose(7.84000000, 3.23928000, 0.86998147, 0.00000075, -0.00000197, 0.50251043, 0.86457115)
     batteryPose = create_pose(8.10856002, 3.23999991, 0.87299210, 0.00001689, 0.00000146, 0.00000001, 1.00000000)
     eYIFIPose = create_pose_angle(7.9712791, 3.2, 1, pi+ pi/4)
-    # spawn_model('coke_can', cokePose)
+    adhesivePose = create_pose_angle(7.9712791, 3.2, 0.87299210, 0)
+
+    #spawn_model('eYIFI', eYIFIPose)
+    spawn_model('coke_can', cokePose)
     # spawn_model('glue', gluePose)
     # spawn_model('battery', batteryPose)
-
-    spawn_model('eYIFI', eYIFIPose)
-    # spawn_model('water_glass', gluePose)
-    # spawn_model('adhesive', batteryPose)
+    #spawn_model('adhesive', adhesivePose)
     
     # printModelState('coke_can')
     # printModelState('glue')

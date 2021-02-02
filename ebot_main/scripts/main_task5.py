@@ -47,6 +47,9 @@ class Detect():
         self.frame_id = msg.pose.header.frame_id
         rospy.loginfo(">> Detected : " + msg.name)
 
+        #TODO Remove before submission
+        rospy.loginfo("Estimated grasping width : " + str(msg.pose.pose.orientation.w + 0.2))
+
 class Ur5(Ur5Moveit):
     def __init__(self):
         Ur5Moveit.__init__(self)
@@ -95,7 +98,11 @@ class Ur5(Ur5Moveit):
         graspPose.position.z += 0.2
         self.go_to_pose(graspPose)
 
-    def graspEYIFI(self, point, yaw=90):
+    def graspEYIFI(self, point, width=0.5, yaw=90):
+        '''
+        Function used only for grasping eYiFi board
+        Takes in the position and the grasping angle as arguments
+        '''
         graspPose = Pose()
         graspPose.position = point
         graspPose.position.x -= 0
@@ -114,40 +121,61 @@ class Ur5(Ur5Moveit):
         ur5.go_to_pose(graspPose)
         
         # #Grasp
-        ur5.closeGripper(0.46) 
+        ur5.closeGripper(width) 
         rospy.sleep(1)
 
         # #retreat from z axis
         graspPose.position.z += h
         ur5.go_to_pose(graspPose)
 
-def main():
-    pickup_list = ['coke_can', 'battery', 'glue'] #Order in which to pickup items
-    w_dict = {'coke_can': 0.27086, 'battery': 0.26500, 'glue' : 0.31}  # calcalated from x2 - x1 + 0.2
-    transformed_pose_list = []
-    w_list = []
+def pickupObject(object_name):
+    '''
+    Note :  object_name should be the real model name and not the gazebo model name
+    '''
+    ur5.openGripper()
 
-    for model in pickup_list:
-        grasp_point = Point()
-        grasp_point = detect.dict[model]
+    if object_name == 'eYFi_board':
+        ur5.graspEYIFI(detect.dict['eYFi_board'], width=w_dict[object_name], yaw=90+45)
+    else:
+        ur5.graspObject(detect.dict[object_name], width=w_dict[object_name])
+
+    ur5.goToDropBox()
+    ur5.openGripper()
+    ur5.homePose()
+    
+
+
+# def main():
+#     pickup_list = ['coke_can', 'battery', 'glue'] #Order in which to pickup items
+
+#     for model in pickup_list:
         
-        ur5.graspObject(grasp_point, width=w_dict[model])
-        ur5.goToDropBox()
-        ur5.openGripper()
-        ur5.homePose()
-        rospy.sleep(0.1)
+#         ur5.graspObject(detect.dict[model], width=w_dict[model])
+#         ur5.goToDropBox()
+#         ur5.openGripper()
+#         ur5.homePose()
+#         rospy.sleep(0.1)
 
 
 if __name__ == '__main__':
+
+    #width estimate  = 0.2 + width of detection window (printed in terminal) 
+    #w_dict uses real model names
+    w_dict = {'coke_can': 0.27086, 
+              'battery': 0.26500, 
+              'glue' : 0.31,
+              'eYFi_board' : 0.5
+              } 
+
     rospy.init_node('grasping_node')
+
+    ur5 = Ur5()
+    ur5.homePose()
 
     detect = Detect()
     detect.detect() #Call the detect service
-    ur5 = Ur5()
-    ur5.homePose()
-    ur5.openGripper()
-    ur5.graspEYIFI(detect.dict['eYFi_board'], 90+45)
-    ur5.goToDropBox()
-    ur5.openGripper()
+    
+    pickupObject('coke_can')
+
     del ur5
 

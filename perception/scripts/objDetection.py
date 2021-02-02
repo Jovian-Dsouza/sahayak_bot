@@ -99,10 +99,14 @@ class DetectObject:
             objPoseMsg.pose.header.frame_id = 'base_link'
             objPoseMsg.pose.header.stamp = rospy.Time.now()
             objPoseMsg.pose.pose.position = centroid_point
+
+            #TODO REMOVE this berfore submission
+            width = np.asscalar(max_val[0] - min_val[0])
+            objPoseMsg.pose.pose.orientation.w = width
+
             self.detection_info_pub.publish(objPoseMsg)
             rospy.sleep(0.1)
 
-            #width = np.asscalar(max_val[0] - min_val[0])
             #print("%d, %d, %d, %d %0.5f" % (x1, y1, x2, y2, width))
 
         return EmptyResponse()
