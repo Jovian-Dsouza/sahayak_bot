@@ -116,13 +116,17 @@ if __name__ == '__main__':
     batteryPose = create_pose(8.10856002, 3.23999991, 0.87299210, 0.00001689, 0.00000146, 0.00000001, 1.00000000)
     eYIFIPose = create_pose_angle(7.9712791, 3.2, 1, pi+ pi/4)
     adhesivePose = create_pose_angle(7.9712791, 3.2, 0.87299210, 0)
+    FPGAPose = create_pose_angle(7.9712791, 3.2, 0.9, -pi/3)
 
-    #spawn_model('eYIFI', eYIFIPose)
-    spawn_model('coke_can', cokePose)
+    # spawn_model('eYIFI', eYIFIPose)
+    #spawn_model('coke_can', cokePose)
     # spawn_model('glue', gluePose)
     # spawn_model('battery', batteryPose)
     #spawn_model('adhesive', adhesivePose)
-    
+    #spawn_model('water_glass', adhesivePose)
+    #spawn_model('robot_wheels', adhesivePose)
+    spawn_model('soap', FPGAPose)
+
     # printModelState('coke_can')
     # printModelState('glue')
     # printModelState('battery')

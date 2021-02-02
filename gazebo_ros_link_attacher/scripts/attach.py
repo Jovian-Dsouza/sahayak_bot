@@ -12,6 +12,7 @@ if __name__ == '__main__':
     attach_srv.wait_for_service()
     rospy.loginfo("Created ServiceProxy to /link_attacher_node/attach")
 
+    rospy.sleep(5)
     # Link them
     rospy.loginfo("Applying brakes to ebot")
     req = AttachRequest()

@@ -98,9 +98,9 @@ class Ur5(Ur5Moveit):
         graspPose.position.z += 0.2
         self.go_to_pose(graspPose)
 
-    def graspEYIFI(self, point, width=0.5, yaw=90):
+    def graspObjectVertical(self, point, width=0.5, yaw=90):
         '''
-        Function used only for grasping eYiFi board
+        Function used only for grasping object vertcally
         Takes in the position and the grasping angle as arguments
         '''
         graspPose = Pose()
@@ -135,7 +135,10 @@ def pickupObject(object_name):
     ur5.openGripper()
 
     if object_name == 'eYFi_board':
-        ur5.graspEYIFI(detect.dict['eYFi_board'], width=w_dict[object_name], yaw=90+45)
+        #TODO need a better way of finding the object's yaw angle instead of manually giving it
+        ur5.graspObjectVertical(detect.dict[object_name], width=w_dict[object_name], yaw=90+45)
+    elif object_name == 'FPGA_board':
+        ur5.graspObjectVertical(detect.dict[object_name], width=w_dict[object_name], yaw=90+60)
     else:
         ur5.graspObject(detect.dict[object_name], width=w_dict[object_name])
 
@@ -164,7 +167,11 @@ if __name__ == '__main__':
     w_dict = {'coke_can': 0.27086, 
               'battery': 0.26500, 
               'glue' : 0.31,
-              'eYFi_board' : 0.5
+              'eYFi_board' : 0.5,
+              'adhesive' : 0.267674286664,
+              'water_glass' : 0.2,
+              'robot_wheels' : 0.26,
+              'FPGA_board' : 0.3
               } 
 
     rospy.init_node('grasping_node')
@@ -175,7 +182,7 @@ if __name__ == '__main__':
     detect = Detect()
     detect.detect() #Call the detect service
     
-    pickupObject('coke_can')
+    pickupObject('FPGA_board')
 
     del ur5
 
