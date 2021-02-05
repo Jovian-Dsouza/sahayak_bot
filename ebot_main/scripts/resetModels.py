@@ -95,19 +95,32 @@ def wait_for_all_services():
     rospy.wait_for_service('gazebo/spawn_sdf_model')
     rospy.loginfo("Connected to all services!")
 
+def spawn_eYIFI(y, angle=0):
+    '''
+    Angle in radians
+    '''
+    eYIFIPose = create_pose_angle(7.9712791, y, 1, pi+angle)
+    spawn_model('eYIFI', eYIFIPose)
+    
+def spawn_FPGA(y, angle=0):
+    '''
+    Angle in radians
+    '''
+    FPGAPose = create_pose_angle(7.9712791, y, 0.9, pi/3 + angle)
+    spawn_model('soap', FPGAPose)
+
+model_list = ['robot_wheels', 'eYIFI', 'soap', 'coke_can', 'water_glass', 'adhesive', 'soap2' , 'glue']
+realName_dict = {'robot_wheels' : 'robot_wheels' , 
+                    'eYIFI' : 'eYFi_board', 
+                    'soap' : 'FPGA_board' , 
+                    'coke_can' : 'coke_can', 
+                    'water_glass': 'water_glass', 
+                    'adhesive' : 'adhesive', 
+                    'soap2' : 'battery' , 
+                    'glue' : 'glue'}
+
 if __name__ == '__main__':
     rospy.init_node('reset_models')
-
-    model_list = ['robot_wheels', 'eYIFI', 'soap', 'coke_can', 'water_glass', 'adhesive', 'soap2' , 'glue']
-    realName_dict = {'robot_wheels' : 'robot_wheels' , 
-                     'eYIFI' : 'eYFi_board', 
-                     'soap' : 'FPGA_board' , 
-                     'coke_can' : 'coke_can', 
-                     'water_glass': 'water_glass', 
-                     'adhesive' : 'adhesive', 
-                     'soap2' : 'battery' , 
-                     'glue' : 'glue'}
-    
     wait_for_all_services()
     delete_all_model()
 

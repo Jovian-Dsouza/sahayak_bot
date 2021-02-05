@@ -103,6 +103,8 @@ class DetectObject:
             #TODO REMOVE this berfore submission
             width = np.asscalar(max_val[0] - min_val[0])
             objPoseMsg.pose.pose.orientation.w = width
+            hight = np.asscalar(max_val[1] - min_val[1])
+            objPoseMsg.pose.pose.orientation.z = hight
 
             self.detection_info_pub.publish(objPoseMsg)
             rospy.sleep(0.1)
