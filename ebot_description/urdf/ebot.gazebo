@@ -2,15 +2,15 @@
 
 <robot name="ebot" 
   xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <gazebo>
+  <!-- <gazebo>
     <plugin name="skid_steer_drive_controller" filename="libgazebo_ros_skid_steer_drive.so">
       <updateRate>40.0</updateRate>
       <leftFrontJoint>FWLJ</leftFrontJoint>  
       <rightFrontJoint>FWRJ</rightFrontJoint>
       <leftRearJoint>RWLJ</leftRearJoint>
       <rightRearJoint>RWRJ</rightRearJoint>
-      <wheelSeparation>0.4</wheelSeparation>
-      <wheelDiameter>0.2</wheelDiameter>
+      <wheelSeparation>0.432</wheelSeparation>
+      <wheelDiameter>0.174</wheelDiameter>
       <robotBaseFrame>ebot_base</robotBaseFrame>
       <torque>60</torque>
       <topicName>cmd_vel</topicName>
@@ -21,19 +21,55 @@
       
       <broadcastTF>true</broadcastTF>
    </plugin>
+  </gazebo> -->
+
+  <gazebo>
+     <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+        <updateRate>40.0</updateRate>
+        <leftJoint>RWLJ</leftJoint>
+        <rightJoint>RWRJ</rightJoint>
+        <wheelSeparation>0.432</wheelSeparation>
+        <wheelDiameter>0.174</wheelDiameter>
+        <wheelTorque>120</wheelTorque>
+        <wheelAcceleration>1.0</wheelAcceleration>
+        <commandTopic>cmd_vel</commandTopic>
+        <odometryTopic>odom</odometryTopic>
+        <odometryFrame>odom</odometryFrame>
+        <robotBaseFrame>ebot_base</robotBaseFrame>
+        <publishWheelTF>true</publishWheelTF>
+        <publishOdom>true</publishOdom>
+        <publishWheelJointState>true</publishWheelJointState>
+        <legacyMode>false</legacyMode>
+     </plugin>
   </gazebo>
 
   <gazebo reference="FWL">
     <material>Gazebo/Black</material>
+
+    <mu1 value="0"/>
+    <mu2 value="0"/>
+    <slip1 value="0.0"/>
+    <slip2 value="0.0"/> 
+
+
   </gazebo>
     <gazebo reference="FWR">
     <material>Gazebo/Black</material>
+    <mu1 value="0"/>
+    <mu2 value="0"/>
+    <slip1 value="0.0"/>
+    <slip2 value="0.0"/> 
+
   </gazebo>
+
     <gazebo reference="RWL">
     <material>Gazebo/Black</material>
+    
   </gazebo>
+  
     <gazebo reference="RWR">
     <material>Gazebo/Black</material>
+  
   </gazebo>
 
   <gazebo reference="ebot_base">
