@@ -19,7 +19,7 @@ sudo apt install python-pip
 pip install --upgrade pip
 
 pip install cython==0.26.1
-pip install numpy
+pip install numpy==1.16.6
 
 sudo apt-get update -y
 sudo apt-get install libpcl-dev -y
