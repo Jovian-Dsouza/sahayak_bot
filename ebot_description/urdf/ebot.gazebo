@@ -2,9 +2,9 @@
 
 <robot name="ebot" 
   xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <!-- <gazebo>
+  <gazebo>
     <plugin name="skid_steer_drive_controller" filename="libgazebo_ros_skid_steer_drive.so">
-      <updateRate>40.0</updateRate>
+      <updateRate>100.0</updateRate>
       <leftFrontJoint>FWLJ</leftFrontJoint>  
       <rightFrontJoint>FWRJ</rightFrontJoint>
       <leftRearJoint>RWLJ</leftRearJoint>
@@ -21,9 +21,9 @@
       
       <broadcastTF>true</broadcastTF>
    </plugin>
-  </gazebo> -->
+  </gazebo>
 
-  <gazebo>
+  <!-- <gazebo>
      <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
         <updateRate>40.0</updateRate>
         <leftJoint>RWLJ</leftJoint>
@@ -41,36 +41,77 @@
         <publishWheelJointState>true</publishWheelJointState>
         <legacyMode>false</legacyMode>
      </plugin>
-  </gazebo>
+  </gazebo> -->
 
   <gazebo reference="FWL">
     <material>Gazebo/Black</material>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <maxVel>1.0</maxVel>
+    <minDepth>0.00</minDepth>
 
-    <mu1 value="0"/>
-    <mu2 value="0"/>
-    <slip1 value="0.0"/>
-    <slip2 value="0.0"/> 
+   </gazebo>
 
-
-  </gazebo>
-    <gazebo reference="FWR">
+   <gazebo reference="FWR">
     <material>Gazebo/Black</material>
-    <mu1 value="0"/>
-    <mu2 value="0"/>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <maxVel>1.0</maxVel>
+    <minDepth>0.00</minDepth>
+
+   </gazebo>
+
+   <gazebo reference="RWL">
+    <material>Gazebo/Black</material>
+    <kp>1000000.0</kp>  <!-- kp and kd for rubber -->
+    <kd>100.0</kd>
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <maxVel>1.0</maxVel>
+    <minDepth>0.00</minDepth>
+
+   </gazebo>
+
+   <gazebo reference="RWR">
+    <material>Gazebo/Black</material>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <maxVel>1.0</maxVel>
+    <minDepth>0.00</minDepth>
+
+   </gazebo>
+  <!--  <gazebo reference="FWR">
+    <material>Gazebo/Black</material>
     <slip1 value="0.0"/>
     <slip2 value="0.0"/> 
+    <minDepth>0.001</minDepth>
+    <maxContacts>1</maxContacts>
 
   </gazebo>
 
     <gazebo reference="RWL">
     <material>Gazebo/Black</material>
+    <slip1 value="0.0"/>
+    <slip2 value="0.0"/> 
+    <minDepth>0.001</minDepth>
+    <maxContacts>1</maxContacts>
     
   </gazebo>
   
     <gazebo reference="RWR">
     <material>Gazebo/Black</material>
+    <slip1 value="0.0"/>
+    <slip2 value="0.0"/> 
+    <minDepth>0.001</minDepth>
+    <maxContacts>1</maxContacts>
   
-  </gazebo>
+  </gazebo> -->
 
   <gazebo reference="ebot_base">
     <material>Gazebo/Grey</material>
