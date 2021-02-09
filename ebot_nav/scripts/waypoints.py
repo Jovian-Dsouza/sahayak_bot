@@ -18,8 +18,8 @@ class MoveBaseSeq():
 
         points_seq = [-9.1, -1.2, 0.0,
                       10.7, 10.5, 0.0,
-                      12.6, -1.7, 0.0, # y = -1.7 instead of -1.9 which is within 0.5 tolerance
-                      18.2, -1.4, 0.0,
+                      12.6, -1.5, 0.0, # y = -1.5 instead of -1.9 
+                      20.2, -1.4, 0.0, #x = 18.2 instead of 20.2
                       -2.0, 4.0, 0.0]
 
         yaweulerangles_seq = [pi/4,-pi/2, pi/2, -pi/4, 0]

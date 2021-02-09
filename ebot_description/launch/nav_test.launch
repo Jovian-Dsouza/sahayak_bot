@@ -33,7 +33,7 @@
 	 <node name="rviz" pkg="rviz" type="rviz"   args=" -d $(find ebot_description)/rviz/ebot_visualize.rviz" />
 </group>
 
-<include file="$(find ebot_nav)/launch/navigation.launch">
+<include file="$(find ebot_nav)/launch/navigation.launch" output="screen">
 	<arg name="x" value="$(arg x)"/>
 	<arg name="y" value="$(arg y)"/>
 	<arg name="a" value="$(arg ya)"/>
