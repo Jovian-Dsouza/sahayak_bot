@@ -8,7 +8,7 @@ scan:
   data_type: LaserScan
   topic: /ebot/laser/scan
   marking: true
-  clearing: true
+  clearing: false
 
 map_type: costmap
 
