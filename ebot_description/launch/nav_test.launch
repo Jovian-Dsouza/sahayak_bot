@@ -33,13 +33,12 @@
 	 <node name="rviz" pkg="rviz" type="rviz"   args=" -d $(find ebot_description)/rviz/ebot_visualize.rviz" />
 </group>
 
-<include file="$(find ebot_nav)/launch/navigation.launch" output="screen">
+<include file="$(find ebot_nav)/launch/navigation.launch">
 	<arg name="x" value="$(arg x)"/>
 	<arg name="y" value="$(arg y)"/>
 	<arg name="a" value="$(arg ya)"/>
 </include>
-<!-- <node name="test" pkg="ebot_nav" type="test.py" output="screen" /> -->
 
-  
-  
+<node name="print_move_base_goal" pkg="ebot_nav" type="print_move_base_goal.py" output="screen" />
+<!-- <node name="nav_test" pkg="ebot_nav" type="testNav.py" output="screen"/> -->
 </launch>
