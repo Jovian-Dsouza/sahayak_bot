@@ -39,6 +39,7 @@ alias cm="catkin_make -C ~/catkin_ws && source ~/catkin_ws/devel/setup.bash"
 source /opt/ros/melodic/setup.zsh
 source ~/catkin_ws/devel/setup.zsh
 alias cm="catkin_make -C ~/catkin_ws && source ~/catkin_ws/devel/setup.zsh"
+source ~/catkin_ws/src/sahayak_bot/ebot_nav/scripts/locations.sh
 ```
 
 - Finally source `.bashrc'
