@@ -32,6 +32,14 @@
         <joint name="wrist_2_joint" value="-0.5235" />
         <joint name="wrist_3_joint" value="1.5708" />
     </group_state>
+    <group_state name="navPose" group="ur5_planning_group">
+        <joint name="elbow_joint" value="0.2256" />
+        <joint name="shoulder_lift_joint" value="-0.729" />
+        <joint name="shoulder_pan_joint" value="0" />
+        <joint name="wrist_1_joint" value="0.5207" />
+        <joint name="wrist_2_joint" value="1.57" />
+        <joint name="wrist_3_joint" value="0" />
+    </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
     <end_effector name="ur5_end_effector" parent_link="gripper_base_link" group="ur5_planning_group" />
     <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->
