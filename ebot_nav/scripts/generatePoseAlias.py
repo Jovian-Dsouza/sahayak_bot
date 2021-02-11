@@ -11,4 +11,4 @@ with open(path, "w") as f:
         x = p.x
         y = p.y
         ya = euler_from_quaternion([q.x, q.y, q.z, q.w])[2]
-        f.write('alias %s="roslaunch ebot_description arm_nav_test.launch x:=%0.4f y:=%0.4f ya:=%0.4f"\n' % (key, x, y, ya))
+        f.write('alias nav_%s="roslaunch ebot_description arm_nav_test.launch x:=%0.4f y:=%0.4f ya:=%0.4f nav:=false"\n' % (key, x, y, ya))
