@@ -61,6 +61,7 @@ add_service_files(
   SetPose.srv
   SetNamedPose.srv
   SetGripper.srv
+  GraspObject.srv
 )
 
 ## Generate actions in the 'action' folder
