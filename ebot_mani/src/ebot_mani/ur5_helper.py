@@ -9,6 +9,8 @@ import moveit_commander
 import moveit_msgs.msg
 import actionlib
 
+from mani_poses import joint_angles_dict, poses_dict
+from tf.transformations import euler_from_quaternion
 
 class Ur5Moveit:
 
@@ -55,6 +57,13 @@ class Ur5Moveit:
 
     def printCurrentPose(self):
         pose_values = self.arm_group.get_current_pose().pose
+
+        #TODO need a better way
+        #rosrun tf tf_echo ebot_base base_link
+        #here am just doing a linear translation from
+        #ebot_base -> base_link
+        pose_values.position.z -= 0.521
+
         rospy.loginfo('\033[94m' + ">>> Current Pose:" + '\033[0m')
         rospy.loginfo("(%f , %f, %f, %f, %f, %f, %f)" % (pose_values.position.x,
                                                         pose_values.position.y,
@@ -63,6 +72,23 @@ class Ur5Moveit:
                                                         pose_values.orientation.y,
                                                         pose_values.orientation.z,
                                                         pose_values.orientation.w))
+
+    def printCurrentPoseEuler(self):
+        pose_values = self.arm_group.get_current_pose().pose
+
+        #TODO need a better way
+        #rosrun tf tf_echo ebot_base base_link
+        #here am just doing a linear translation from
+        #ebot_base -> base_link
+        pose_values.position.z -= 0.521
+        
+        o = pose_values.orientation
+        a = euler_from_quaternion([o.x, o.y, o.z, o.w])
+        rospy.loginfo('\033[94m' + ">>> Current Pose (in Euler):" + '\033[0m')
+        rospy.loginfo("(%f , %f, %f, %f, %f, %f)" % (pose_values.position.x,
+                                                        pose_values.position.y,
+                                                        pose_values.position.z,
+                                                        a[0], a[1], a[2]))
 
     def printCurrentJointValues(self):
         j = self.arm_group.get_current_joint_values()
@@ -93,6 +119,46 @@ class Ur5Moveit:
                 '\033[94m' + ">>> set_joint_angles() Failed." + '\033[0m')
 
         return flag_plan
+
+    def go_to_named_pose(self, name):
+        
+        if name in joint_angles_dict:
+            if(self.set_joint_angles(joint_angles_dict[name])):
+                rospy.loginfo('\033[94m' + " >>> Name Pose Reached : " + name + '\033[0m')
+                return True
+            else:
+                return False
+        
+        elif name in poses_dict:
+            if(self.go_to_pose(poses_dict[name])):
+                rospy.loginfo('\033[94m' + " >>> Name Pose Reached : " + name + '\033[0m')
+                return True
+            else:
+                return False
+        
+        else:
+            rospy.logerr(name + " Pose not found")
+            return False
+
+    def joint_angles_to_pose(self, list_joint_angles):
+        flag = self.set_joint_angles(list_joint_angles)
+        if(flag):
+            self.printCurrentPose()
+    
+    def pose_to_joint_angles(self, arg_pose):
+        flag = self.go_to_pose(arg_pose)
+        if(flag):
+            self.printCurrentJointValues()
+    
+    def name_pose_to_pose(self, name):
+        flag = self.go_to_named_pose(name)
+        if(flag):
+            self.printCurrentPose()
+    
+    def name_pose_to_joint_angles(self, name):
+        flag = self.go_to_named_pose(name)
+        if(flag):
+            self.printCurrentJointValues()
 
     def set_gripper_value(self, arg_list_joint_angles):
         self.gripper_group.set_joint_value_target(arg_list_joint_angles)
