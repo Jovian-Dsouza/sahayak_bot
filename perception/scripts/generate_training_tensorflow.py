@@ -12,6 +12,22 @@ import random
 import os
 import rospkg
 
+def create_pose_random_orient(x, y, z):
+    '''
+    returns a Pose() object from the given x, y, z, qx, qy , qz, qw values
+    '''
+    pose = Pose()
+    pose.position.x = x
+    pose.position.y = y
+    pose.position.z = z
+
+    q = quaternion_from_euler(0 , 0, random.uniform(0, 2*math.pi))
+    pose.orientation.x = q[0]
+    pose.orientation.y = q[1]
+    pose.orientation.z = q[2]
+    pose.orientation.w = q[3]
+    return pose
+
 def random_pose(x_min, x_max , y_min, y_max, z=0.9):
     x = random.uniform(x_min, x_max)
     y = random.uniform(y_min, y_max)
@@ -23,7 +39,7 @@ def scan(model):
         sample_was_good = False
         try_count = 0
         while not sample_was_good and try_count < 5:
-            pose = random_pose(7.7, 8.1, 3.2, 4)
+            pose = create_pose_random_orient(7.971279, 3.2,  1.0)
             spawn_model(model, pose)
             rospy.sleep(4)
 
@@ -40,7 +56,7 @@ def scan(model):
                 sample_was_good = True
                 #Save Image as model_name/n_scan.jpg
                 rect = obj_list[0]
-                sample_was_good = img_obj.crop_save_img(model+"/"+str(i)+".png", rect)
+                sample_was_good = img_obj.crop_save_img(realName_dict[model]+"/"+str(i)+".png", rect)
                 rospy.sleep(0.2)
                 img_obj.draw_rectangle(rect)
                 img_obj.publish_image()
@@ -68,16 +84,24 @@ def init_dir(folder_name, model_list):
     
     for model in model_list:
         try:  
-            os.mkdir( './' + model)  
+            os.mkdir( './' + realName_dict[model])  
         except OSError as error:  
             rospy.logerr(error)
     
 
 if __name__ == '__main__':
-    n_scans = 40
-    model_list = ['coke_can', 'glue', 'battery']
+    n_scans = 30
+    model_list = ['adhesive','coke_can', 'robot_wheels', 'eYIFI', 'soap', 'water_glass', 'soap2' , 'glue']
+    realName_dict = {'robot_wheels' : 'robot_wheels' , 
+                     'eYIFI' : 'eYFi_board', 
+                     'soap' : 'FPGA_board' ,  
+                     'coke_can' : 'coke_can', 
+                     'water_glass': 'water_glass', 
+                     'adhesive' : 'adhesive', 
+                     'soap2' : 'battery' , 
+                     'glue' : 'glue'}
 
-    init_dir('training_dataset_png', model_list)
+    init_dir('task5_dataset', model_list)
     rospy.init_node('generate_training', anonymous=True)
     wait_for_all_services()
 

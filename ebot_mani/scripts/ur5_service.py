@@ -9,6 +9,10 @@ def set_named_pose_cb(req):
     flag = ur5.go_to_named_pose(req.poseName)
     return SetNamedPoseResponse(flag)
 
+def print_name_pose_cb(req):
+    flag = ur5.print_name_pose(req.poseName)
+    return SetNamedPoseResponse(flag)
+
 def set_pose_cb(req):
     flag = ur5.go_to_pose(req.pose)
     return SetPoseResponse(flag)
@@ -28,7 +32,13 @@ def grasp_object_vertical_cb(req):
 def grasp_object_horizontal_cb(req):
     flag = ur5.graspObjectHorizontal(req.point, req.width, req.yaw)
     return GraspObjectResponse(flag)
-    
+
+def add_plane_cb(req):
+    # ur5.scene.add_plane(req.name, req.pose, normal=(0, 0, 1), offset=0)
+    ur5.scene.add_box(req.name, req.pose, size=(0.1, 0.1, 0.1))
+    print("Add Plane" + req.name)
+    return AddPlaneResponse()
+
 if __name__ == '__main__':
     rospy.init_node("ur5_service")
     ur5 = Ur5Moveit()
@@ -39,6 +49,9 @@ if __name__ == '__main__':
     rospy.Service('ebot_mani/open_gripper', Empty, open_gripper_cb)
     rospy.Service('ebot_mani/grasp_object_vertical', GraspObject, grasp_object_vertical_cb)
     rospy.Service('ebot_mani/grasp_object_horizontal', GraspObject, grasp_object_horizontal_cb)
+    rospy.Service('ebot_mani/print_name_pose', SetNamedPose, print_name_pose_cb)
+    rospy.Service('ebot_mani/add_plane', AddPlane, add_plane_cb)
+    # rospy.Service('ebot_mani/add_box', AddBox, add_box_cb)
     rospy.spin()
 
     del ur5

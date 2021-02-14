@@ -1,5 +1,5 @@
 <launch>
-  <arg name="gui" default="true"/>
+  <arg name="gui" default="false"/>
 <!--   ebot -->
 <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find ebot_description)/urdf/ebot_ur5.xacro'"/>
    
@@ -26,8 +26,10 @@
 <!-- include moveit launch file and node for pick and place using perception feedback-->
 <include file="$(find pkg_moveit_ebot_ur5)/launch/ur5_bringup_moveit.launch"/>
 
-<!-- <node pkg="gazebo_ros_link_attacher" name="link_attach" type="attach.py" output="screen"/>
-<node name="grasping_node" pkg="ebot_mani" type="homeUr5.py"/> -->
+<node pkg="gazebo_ros_link_attacher" name="link_attach" type="attach.py" output="screen"/>
+
+<node name="ur5_service" pkg="ebot_mani" type="ur5_service.py" output="screen"/>
+<node name="home_node" pkg="ebot_mani" type="trainingUr5.py"/>
 
   
 </launch>
