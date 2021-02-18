@@ -1,7 +1,7 @@
 <launch>
 	<arg name="gui" default="true"/>
 	<arg name="rviz_gui" default="true"/>
-
+	<arg name="services" default="false"/>
 <!--   ebot -->
     <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find ebot_description)/urdf/ebot.xacro'"/>
 
@@ -39,6 +39,7 @@
 	<arg name="a" value="$(arg ya)"/>
 </include>
 
-<node name="print_move_base_goal" pkg="ebot_nav" type="print_move_base_goal.py" output="screen" />
-<!-- <node name="nav_test" pkg="ebot_nav" type="testNav.py" output="screen"/> -->
+ <node name="transform_service" pkg="perception" type="transform_service.py"/>   
+<node name="print_move_base_goal" pkg="ebot_nav" type="print_move_base_goal.py" output="screen"/>
+
 </launch>

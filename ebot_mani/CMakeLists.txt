@@ -59,9 +59,11 @@ catkin_python_setup()
 add_service_files(
   FILES
   SetPose.srv
+  GetPose.srv
   SetNamedPose.srv
   SetGripper.srv
   GraspObject.srv
+  AddPlane.srv
 )
 
 ## Generate actions in the 'action' folder

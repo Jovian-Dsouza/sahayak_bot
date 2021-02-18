@@ -5,7 +5,7 @@ import random
 import math
 from math import pi
 import rospkg
-from tf.transformations import quaternion_from_euler
+from tf.transformations import quaternion_from_euler, euler_from_quaternion
 
 from gazebo_msgs.srv import GetPhysicsProperties
 from gazebo_msgs.srv import SetPhysicsProperties
@@ -17,12 +17,13 @@ from gazebo_msgs.srv import DeleteModel
 from geometry_msgs.msg import Pose
 from sensor_msgs.msg import PointCloud2
 
+deleteModel = rospy.ServiceProxy('gazebo/delete_model', DeleteModel)
 
-def delete_model():
+def delete_model(name):
     delete_model_prox = rospy.ServiceProxy('gazebo/delete_model', DeleteModel)
-    delete_model_prox('training_model')
+    delete_model_prox(name)
 
-def create_pose(x, y, z , qx, qy,qz,qw):
+def create_pose(x, y, z ,qx ,qy ,qz ,qw):
     '''
     returns a Pose() object from the given x, y, z, qx, qy , qz, qw values
     '''
@@ -74,8 +75,11 @@ def printModelState(model_name):
     model_state = get_model_state_prox(model_name,'world')
     p = model_state.pose.position
     q = model_state.pose.orientation
-    print("(%0.8f, %0.8f, %0.8f, %0.8f, %0.8f, %0.8f, %0.8f)" % \
-            (p.x, p.y, p.z, q.x, q.y, q.z, q.w))
+    # print("(%0.8f, %0.8f, %0.8f, %0.8f, %0.8f, %0.8f, %0.8f)" % \
+    #         (p.x, p.y, p.z, q.x, q.y, q.z, q.w))
+    _, _ , yaw = euler_from_quaternion([q.x, q.y, q.z, q.w])
+    print("'" + model_name+ "' : create_pose_angle(%0.5f, %0.5f, %0.5f, %0.5f)," %\
+             (p.x, p.y, p.z, yaw))
 
 def delete_all_model():
     delete_model_prox = rospy.ServiceProxy('gazebo/delete_model', DeleteModel)
@@ -109,6 +113,20 @@ def spawn_FPGA(y, angle=0):
     FPGAPose = create_pose_angle(7.9712791, y, 0.9, pi/3 + angle)
     spawn_model('soap', FPGAPose)
 
+def getAllStoreModels():
+    printModelState('eYFi_board')
+    printModelState('FPGA_board')
+    printModelState('adhesive')
+    printModelState('glue')
+    printModelState('battery')
+    printModelState('robot_wheels')
+
+def resetModel(model, newPose):
+    deleteModel(model)
+    deleteModel(gazeboName[model])
+    spawn_model(gazeboName[model], newPose)
+    
+
 model_list = ['robot_wheels', 'eYIFI', 'soap', 'coke_can', 'water_glass', 'adhesive', 'soap2' , 'glue']
 realName_dict = {'robot_wheels' : 'robot_wheels' , 
                     'eYIFI' : 'eYFi_board', 
@@ -119,10 +137,19 @@ realName_dict = {'robot_wheels' : 'robot_wheels' ,
                     'soap2' : 'battery' , 
                     'glue' : 'glue'}
 
+gazeboName = {'robot_wheels' : 'robot_wheels' , 
+                    'eYFi_board':'eYIFI'  , 
+                    'FPGA_board' : 'soap' , 
+                    'coke_can' : 'coke_can', 
+                    'water_glass': 'water_glass', 
+                    'adhesive' : 'adhesive', 
+                    'battery' :'soap2' , 
+                    'glue' : 'glue'}
+
 if __name__ == '__main__':
     rospy.init_node('reset_models')
     wait_for_all_services()
-    delete_all_model()
+    # delete_all_model()
 
     cokePose = create_pose(7.9712791, 3.3939284, 0.8676281, -0.0126091, 0.0003598, 0.0000164, 0.9999204)
     gluePose = create_pose(7.84000000, 3.23928000, 0.86998147, 0.00000075, -0.00000197, 0.50251043, 0.86457115)
@@ -131,15 +158,15 @@ if __name__ == '__main__':
     adhesivePose = create_pose_angle(7.9712791, 3.2, 0.87299210, 0)
     FPGAPose = create_pose_angle(7.9712791, 3.2, 0.9, -pi/3)
 
-    # spawn_model('eYIFI', eYIFIPose)
-    #spawn_model('coke_can', cokePose)
-    # spawn_model('glue', gluePose)
-    # spawn_model('battery', batteryPose)
-    #spawn_model('adhesive', adhesivePose)
-    #spawn_model('water_glass', adhesivePose)
-    #spawn_model('robot_wheels', adhesivePose)
-    spawn_model('soap', FPGAPose)
+    #store room
+  
+    storeTable = {'eYFi_board' : create_pose_angle(26.55000, -3.23000, 1.08999, -0.00011),
+        'FPGA_board' : create_pose_angle(26.29000, -3.61300, 1.01500, -0.00000),
+        'adhesive' : create_pose_angle(26.78000, -3.21000, 1.17000, -0.00000),
+        'glue' : create_pose_angle(26.70000, -2.98400, 1.01450, 0.00000),
+        'battery' : create_pose_angle(26.39500, -3.45000, 1.01750, -0.00000),
+        'robot_wheels' : create_pose_angle(26.33000, -3.88012, 1.05310, 0.00002)}
 
-    # printModelState('coke_can')
-    # printModelState('glue')
-    # printModelState('battery')
+    for model in storeTable.keys():
+        resetModel(model, storeTable[model])
+    

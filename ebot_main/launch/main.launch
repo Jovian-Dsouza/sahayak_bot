@@ -1,0 +1,4 @@
+<launch>
+    <node name="ur5_service" pkg="ebot_mani" type="ur5_service.py" output="screen"/>
+    <node name="main" pkg="ebot_main" type="main.py" output="screen"/>
+</launch>

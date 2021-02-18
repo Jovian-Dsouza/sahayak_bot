@@ -1,11 +1,12 @@
 <launch>
+	<arg name="gui" default="true"/>
+	<arg name="rviz_gui" default="true"/>
+
 <!--   ebot -->
     <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find ebot_description)/urdf/ebot_ur5.xacro'"/>
    
-
-
 <!--   ur5 world -->
-	<include file="$(find ebot_gazebo)/launch/packaging_assist.launch" />
+	<include file="$(find ebot_gazebo)/launch/packaging_assist_1.launch" />
 
 	<arg name="x" default="0"/>
 	<arg name="y" default="0"/>
@@ -19,8 +20,28 @@
 	    args="-urdf -param robot_description -model ebot -x $(arg x) -y $(arg y) -z $(arg z) -R $(arg r) -P $(arg p) -Y $(arg ya)" />
 
 		
-<!-- include the moveit launch file and node for pick and place using perception-->
-	
+	<!-- Robot State and Joint state  -->
+<node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+    <param name="publish_frequency" type="double" value="50.0" />
+    <param name="tf_prefix" type="string" value="" />
+</node>
 
+<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="/use_gui" value="false"/>
+    <rosparam param="/source_list">[/joint_states]</rosparam>
+</node>
+
+<!-- include moveit launch file -->
+<include file="$(find pkg_moveit_ebot_ur5)/launch/ur5_moveit.launch">
+  <arg name="rviz_gui" value="$(eval rviz_gui)"/>
+</include>
+
+<include file="$(find ebot_main)/launch/services.launch"/>
+
+<include file="$(find ebot_nav)/launch/navigation.launch">
+	<arg name="x" value="$(arg x)"/>
+	<arg name="y" value="$(arg y)"/>
+	<arg name="a" value="$(arg ya)"/>	
+</include> 
   
 </launch>

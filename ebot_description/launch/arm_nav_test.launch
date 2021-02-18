@@ -2,6 +2,11 @@
 	<arg name="gui" default="true"/>
 	<arg name="rviz_gui" default="true"/>
 	<arg name="nav" default="true"/>
+	<arg name="sim" default="true"/>
+	<arg name="random" default="false"/>
+	<arg name="services" default="true"/>
+	<arg name="pose" default="navPose"/>
+
 	<arg name="x" default="0"/>
 	<arg name="y" default="0"/>
 	<arg name="z" default="0"/>
@@ -13,10 +18,23 @@
 <!--   ebot -->
     <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find ebot_description)/urdf/ebot.xacro'"/>
 
-<!--   test1 world for testing your navigation stack in small simulation world-->
-	<include file="$(find ebot_gazebo)/launch/packaging_assist_cam.launch">
-		<arg name="gui" value="$(arg gui)"/>
-	</include>
+<!--   Start Gazebo Simulation-->
+	<group if="$(eval sim and not random)">
+		<include file="$(find ebot_gazebo)/launch/packaging_assist_1.launch">
+			<arg name="gui" value="$(arg gui)"/>
+		</include>
+	</group>
+
+	<group if="$(eval sim and random)">
+		<include file="$(find ebot_gazebo)/launch/packaging_assist.launch">
+			<arg name="gui" value="$(arg gui)"/>
+		</include>
+	</group>
+
+	<group if="$(eval not sim)">
+		<!-- If sim already started delete models -->
+		<node name="deleteModels" type="deleteModels.py" pkg="ebot_main" output="screen"/>
+	</group>
 
 	
 <!-- Spawn the robot model -->
@@ -39,7 +57,11 @@
   <arg name="rviz_gui" value="$(eval rviz_gui and not nav)"/>
 </include>
 
-<node name="navPose" pkg="ebot_nav" type="navPose.py" output="screen"/>
+<group if="$(arg services)">
+	<include file="$(find ebot_main)/launch/services.launch">
+		<arg name="pose" value="$(arg pose)"/>
+	</include>
+</group>
 
 <!-- include your navigation launch file  -->		
 <group if="$(eval rviz_gui and nav)">
@@ -52,8 +74,8 @@
 	<arg name="a" value="$(arg ya)"/>	
 </include> 
 
-<!-- Start perception -->
-<!-- <include file="$(find perception)/launch/perception.launch"/> -->
+
+<!-- <node name="pclFilterAndObjDectection" type="pclFilterAndObjDectection.py" pkg="perception" output="screen"/> -->
 
 <!-- <node name="test" pkg="ebot_nav" type="test.py" output="screen" /> -->
 

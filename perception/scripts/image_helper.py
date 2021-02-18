@@ -13,13 +13,16 @@ class ImagePub:
 
   def __init__(self):
     self.image_pub = rospy.Publisher("/detected_image",Image, queue_size=1)
-    # self.image_sub = rospy.Subscriber('/camera/color/image_raw2', Image, self.capture_image)
+    self.image_sub = rospy.Subscriber('/camera/color/image_raw2', Image, self.image_cb)
     self.bridge = CvBridge()
-    
+  
+  def image_cb(self, msg):
+    self.ros_image = msg
+
   def capture_image(self):
-    ros_image = rospy.wait_for_message('/camera/color/image_raw2', Image)
+    # ros_image = rospy.wait_for_message('/camera/color/image_raw2', Image)
     try:
-      self.cv_image = self.bridge.imgmsg_to_cv2(ros_image, "bgr8")
+      self.cv_image = self.bridge.imgmsg_to_cv2(self.ros_image, "bgr8")
     except CvBridgeError as e:
       rospy.logerr(e)
   

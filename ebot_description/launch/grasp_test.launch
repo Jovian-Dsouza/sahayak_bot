@@ -34,26 +34,12 @@
 </include>
 
 <node name="brakes" pkg="gazebo_ros_link_attacher" type="attach.py"/>
-<node name="homeUr5" pkg="ebot_mani" type="homeUr5.py"/>
 
-<include file="$(find perception)/launch/perception.launch"/>
+<node name="ur5_service" pkg="ebot_mani" type="ur5_service.py" output="screen"/>
+<node name="homeUr5" pkg="ebot_mani" type="homeUr5.py"/>
+<node name="pclFilterAndObjDectection" type="pclFilterAndObjDectection.py" pkg="perception" output="screen"/>
 
 <node name="resetModels" pkg="ebot_main" type="resetModels.py"/>
-
-<!-- recording bag file -->
-<arg name="rec_name" default="task4.bag"/>
-<arg name="record" default="false"/>
-<group if="$(arg record)">
-
-<node name="state_node" pkg="topic_tools" type="throttle" 
-  args="messages /gazebo/model_states 10.0"/>
-
-<node name="task4_rosbag" pkg="rosbag" type="record"
-  args="record -O $(find ebot_gazebo)/bag_files/$(arg rec_name)
-  /detection_info
-  /gazebo/model_states_throttle
-  /joint_states" output="screen"/>
-</group>
 
 
 

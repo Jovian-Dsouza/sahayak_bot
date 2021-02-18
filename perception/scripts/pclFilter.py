@@ -19,14 +19,23 @@ def pcl_callback(pcl_msg):
     vox.set_leaf_size(LEAF_SIZE, LEAF_SIZE, LEAF_SIZE)
     cloud_filtered = vox.filter()
 
-    # #PassThrough Filter y axis
-    # passthrough = cloud_filtered.make_passthrough_filter()
-    # filter_axis = 'y'
-    # passthrough.set_filter_field_name(filter_axis)
-    # axis_min = -0.2
-    # axis_max = 1
-    # passthrough.set_filter_limits(axis_min, axis_max)
-    # cloud_filtered = passthrough.filter()
+    # PassThrough Filter x axis
+    passthrough = cloud_filtered.make_passthrough_filter()
+    filter_axis = 'x'
+    passthrough.set_filter_field_name(filter_axis)
+    axis_min = -1
+    axis_max = 1
+    passthrough.set_filter_limits(axis_min, axis_max)
+    cloud_filtered = passthrough.filter()
+
+    #PassThrough Filter y axis
+    passthrough = cloud_filtered.make_passthrough_filter()
+    filter_axis = 'y'
+    passthrough.set_filter_field_name(filter_axis)
+    axis_min = -0.2
+    axis_max = 0.8
+    passthrough.set_filter_limits(axis_min, axis_max)
+    cloud_filtered = passthrough.filter()
 
     #PassThrough Filter z axis
     passthrough = cloud_filtered.make_passthrough_filter()

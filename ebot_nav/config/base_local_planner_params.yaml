@@ -4,7 +4,7 @@ recovery_behaviour_enabled: true
 TrajectoryPlannerROS:
   
   #Robot parameters
-  acc_lim_x: 2.5
+  acc_lim_x: 2.03
   acc_lim_y: 0.0
   acc_lim_theta: 3.5
 
@@ -17,8 +17,8 @@ TrajectoryPlannerROS:
   holonomic_robot: false
 
   #Goal parameters
-  yaw_goal_tolerance: 0.087 #0.087
-  xy_goal_tolerance: 0.1 #0.1
+  yaw_goal_tolerance: 0.1 #0.1 #0.087
+  xy_goal_tolerance:  0.15 #0.1
 
   #Trajectory Scoring Parameters
   # path_distance_bias: 2.8 #default 0.6
@@ -26,7 +26,7 @@ TrajectoryPlannerROS:
   occdist_scale : 0.01 #default 0.01
 
   #Forward Simualtion
-  sim_time: 1.5
+  sim_time: 1.4
   vx_samples: 10
   vtheta_samples: 21
 
@@ -49,12 +49,12 @@ DWAPlannerROS:
   holonomic_robot: false
 
   # Goal Tolerance Parameters
-  yaw_goal_tolerance: 0.1 #0.087
-  xy_goal_tolerance: 0.2 #0.1
+  yaw_goal_tolerance: 0.1 #0.1 #0.087
+  xy_goal_tolerance: 0.15 #0.2 #0.1
   # latch_xy_goal_tolerance: false
 
   # # Forward Simulation Parameters
-  sim_time: 1.9 # default 1.7
+  sim_time: 1.7 # default 1.7
   # sim_granularity: 0.02
   vx_samples: 10
   vy_samples: 0

@@ -1,0 +1,10 @@
+<launch>
+    <arg name="pose" default="navPose"/>
+
+    <node name="transform_service" pkg="perception" type="transform_service.py"/>   
+    <node name="ur5_service" pkg="ebot_mani" type="ur5_service.py" output="screen"/>
+    <!-- <node name="ur5_client" pkg="ebot_mani" type="ur5_client.py" args="$(arg pose)" output="screen"/> -->
+    <node name="print_move_base_goal" pkg="ebot_nav" type="print_move_base_goal.py" output="screen"/>
+    <node name="pclFilterAndObjDectection" type="pclFilterAndObjDectection.py" pkg="perception" output="screen"/>
+    <!-- <node name="teleop_twist_keyboard" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py"/> -->
+</launch>

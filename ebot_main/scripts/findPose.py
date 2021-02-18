@@ -1,0 +1,1 @@
+../../ebot_mani/scripts/findPose.py
