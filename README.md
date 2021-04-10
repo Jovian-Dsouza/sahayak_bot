@@ -1,4 +1,8 @@
 # **_Sahayak Bot_**
+A Mobile Robot equipped with a UR5 Robotic arm capable of autonomously navigating and carrying items across office rooms. Developed a custom ML model that uses VFH features to accurately detect objects in real time along with its Pose in 3D.
+
+![Navigation](assets/1.png)
+Sahayak bot Navigation
 
 ## Installation
 
