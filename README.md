@@ -1,8 +1,19 @@
 # **_Sahayak Bot_**
-A Mobile Robot equipped with a UR5 Robotic arm capable of autonomously navigating and carrying items across office rooms. Developed a custom ML model that uses VFH features to accurately detect objects in real time along with its Pose in 3D.
+"Sahayak Bot" which translates to "Helper Bot", is meant to help in doing all the boring office stuff such as moving an item for one place to another. Technically, It is a mobile robot equipped with a UR5 robotic arm. It is capable of autonomously navigating in an office environment. It uses a combination machine learning and point cloud features to detect various objects , Grasp them using the robotic arm and deliver them to different locations. 
 
 ![sahayak_bot](assets/sahayak_bot.gif)
 Sahayak bot
+
+
+## Core packages
+The code has been put into logical ROS packages to make the code modular and reusable. Some of the core packages include :
+
+| Package | Description |
+| :---:   | :---: |
+| ebot_nav | This contains all the config files and test_scripts for navigation |
+| ebot_mani | This contains the manipulator code to perform pick and place operations |
+| perception | This defines the object detection and pose estimation scripts |
+| ebot_main | This ties all the packages together to perform the main task |
 
 ## Installation
 
